@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Domain.fs" />
+    <Compile Include="Aggregate.fs" />
+    <Compile Include="ReadSide.fs" />
+    <Compile Include="CommandHandler.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CosmoStore" Version="2.0.1" />
+    <PackageReference Include="CosmoStore.CosmosDb" Version="2.0.1" />
+    <PackageReference Include="CosmoStore.InMemory" Version="2.0.1" />
+    <PackageReference Include="CosmoStore.Marten" Version="2.0.3" />
+  </ItemGroup>
+
+</Project>
