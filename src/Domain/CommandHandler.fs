@@ -13,20 +13,14 @@ module Mapping =
         match evn with
         | BookieAdded args -> "BookieAdded", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
         | DepositMade args -> "DepositMade", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | _ -> failwith "not handled"
-        // | AllTasksCleared -> "AllTasksCleared", (Newtonsoft.Json.Linq.JValue.CreateNull() :> JToken)
-        // | TaskCompleted args -> "TaskCompleted", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        // | TaskDueDateChanged args -> "TaskDueDateChanged", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | WithdrawalMade args -> "WithdrawalMade", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
     
     let toDomainEvent data =
         match data with
         | "BookieAdded", args -> args |> CosmosDb.Serialization.objectFromJToken |> BookieAdded
         | "DepositMade", args -> args |> CosmosDb.Serialization.objectFromJToken |> DepositMade
+        | "WithdrawalMade", args -> args |> CosmosDb.Serialization.objectFromJToken |> WithdrawalMade
         | _ -> failwith "can't handle"
-        // | "TaskRemoved", args -> args |> CosmosDb.Serialization.objectFromJToken |> TaskRemoved 
-        // | "AllTasksCleared", _ -> AllTasksCleared 
-        // | "TaskCompleted", args -> args |> CosmosDb.Serialization.objectFromJToken |> TaskCompleted 
-        // | "TaskDueDateChanged", args -> args |> CosmosDb.Serialization.objectFromJToken |> TaskDueDateChanged 
 
 type EventStore = {
     GetCurrentState : unit -> State
