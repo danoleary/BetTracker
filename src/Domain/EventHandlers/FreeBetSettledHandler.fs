@@ -1,16 +1,15 @@
-module BackBetSettledHandler
+module FreeBetSettledHandler
 
 open Domain
 open DomainHelpers
 
 let private calculateWinnings (Stake stake) (Odds odds) =
-    Winnings (stake * (odds - 1m))
+    Winnings (stake * odds)
 
-let private settle (evt: CmdArgs.SettleBackBet) bookie  =
+let private settle (evt: CmdArgs.SettleFreeBet) bookie  =
     let bet: Bet = bookie.Bets
                 |> List.find (fun x -> x.Id = evt.BetId)
                 |> (fun t -> { t with Settled = Settled })
-                
     let otherBets = List.filter (fun (x: Bet) -> x.Id <> bet.Id) bookie.Bets
 
     match evt.Result with
@@ -21,5 +20,5 @@ let private settle (evt: CmdArgs.SettleBackBet) bookie  =
     | Lose -> 
         { bookie with Bets = bet :: otherBets;}
 
-let applyBackBetSettled state (evt: CmdArgs.SettleBackBet) =
+let applyFreeBetSettled state (evt: CmdArgs.SettleFreeBet) =
     { state with Bookies = (updateBookie state.Bookies evt.Id (settle evt)) }

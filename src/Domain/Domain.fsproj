@@ -6,18 +6,21 @@
 
   <ItemGroup>
     <Compile Include="Domain.fs" />
+    <Compile Include="DomainHelpers.fs" />
     <Compile Include="CommandHandlers/AddBookieHandler.fs" />
     <Compile Include="CommandHandlers/MakeDepositHandler.fs" />
     <Compile Include="CommandHandlers/MakeWithdrawalHandler.fs" />
     <Compile Include="CommandHandlers/PlaceBackBetHandler.fs" />
     <Compile Include="CommandHandlers/PlaceFreeBetHandler.fs" />
     <Compile Include="CommandHandlers/SettleBackBetHandler.fs" />
+    <Compile Include="CommandHandlers/SettleFreeBetHandler.fs" />
     <Compile Include="EventHandlers/BookieAddedHandler.fs" />
     <Compile Include="EventHandlers/DepositMadeHandler.fs" />
     <Compile Include="EventHandlers/WithdrawalMadeHandler.fs" />
     <Compile Include="EventHandlers/BackBetPlacedHandler.fs" />
     <Compile Include="EventHandlers/FreeBetPlacedHandler.fs" />
     <Compile Include="EventHandlers/BackBetSettledHandler.fs" />
+    <Compile Include="EventHandlers/FreeBetSettledHandler.fs" />
     <Compile Include="Aggregate.fs" />
     <Compile Include="ReadSide.fs" />
     <Compile Include="CommandHandler.fs" />

@@ -26,7 +26,7 @@ let main argv =
 
     let bookiesPath = "/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/bookies.csv"
     let bookies = Bookies.Load(bookiesPath).Rows
-    let addBookieCommands = bookies |> Seq.map (fun x -> AddBookie { Id = x.Id; Name = x.Name })
+    let addBookieCommands = bookies |> Seq.map (fun x -> AddBookie { Id = BookieId x.Id; Name = x.Name })
     Seq.iter (fun x -> x |> pipeline) addBookieCommands
 
     let depositsPath = "/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/deposits.csv"
@@ -34,8 +34,8 @@ let main argv =
     let depositCommands =
         deposits
         |> Seq.map (fun x -> MakeDeposit {
-                                Id = x.Id;
-                                Transaction = { Timestamp = DateTime.UtcNow; Amount = x.Amount } })
+                                Id = BookieId x.Id;
+                                Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount (decimal x.Amount) } })
     Seq.iter (fun x -> x |> pipeline) depositCommands
 
     let withdrawalsPath = "/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/withdrawals.csv"
@@ -43,8 +43,8 @@ let main argv =
     let withdrawalCommands =
         withdrawals
         |> Seq.map (fun x -> MakeWithdrawal {
-                                Id = x.Id;
-                                Transaction = { Timestamp = DateTime.UtcNow; Amount = x.Amount } })
+                                Id = BookieId x.Id;
+                                Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount x.Amount } })
     Seq.iter (fun x -> x |> pipeline) withdrawalCommands
 
     printState "After task added"

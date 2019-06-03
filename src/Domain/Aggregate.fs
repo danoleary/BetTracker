@@ -7,12 +7,14 @@ open MakeWithdrawalHandler
 open PlaceBackBetHandler
 open PlaceFreeBetHandler
 open SettleBackBetHandler
+open SettleFreeBetHandler
 open BookieAddedHandler
 open DepositMadeHandler
 open WithdrawalMadeHandler
 open BackBetPlacedHandler
 open FreeBetPlacedHandler
 open BackBetSettledHandler
+open FreeBetSettledHandler
 
 type Aggregate<'state, 'command, 'event> = {
     Init : 'state
@@ -28,6 +30,7 @@ let execute state command =
     | PlaceBackBet args -> handlePlaceBackBet state args
     | PlaceFreeBet args -> handlePlaceFreeBet state args
     | SettleBackBet args -> handleSettleBackBet state args
+    | SettleFreeBet args -> handleSettleFreeBet state args
 
 let apply state event = 
     match event with
@@ -37,6 +40,7 @@ let apply state event =
     | BackBetPlaced args -> applyBackBetPlaced state args
     | FreeBetPlaced args -> applyFreeBetPlaced state args
     | BackBetSettled args -> applyBackBetSettled state args
+    | FreeBetSettled args -> applyFreeBetSettled state args
 
 let aggregate = {
     Init = State.Init

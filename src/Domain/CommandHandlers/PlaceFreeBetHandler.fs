@@ -1,13 +1,9 @@
 module PlaceFreeBetHandler
 
 open Domain
+open DomainHelpers
 
-let private onlyIfBookieExists state i =
-    match state.Bookies |> List.tryFind (fun x -> x.Id = i) with
-    | Some task -> task
-    | None -> failwith "Task does not exist"
-
-let handlePlaceFreeBet state (placeFreeBet: CmdArgs.PlaceFreeBet) =
-    placeFreeBet.Id
+let handlePlaceFreeBet state (cmd: CmdArgs.PlaceFreeBet) =
+    cmd.Id
     |> onlyIfBookieExists state
-    |> (fun _ -> FreeBetPlaced placeFreeBet)
+    |> (fun _ -> FreeBetPlaced cmd)

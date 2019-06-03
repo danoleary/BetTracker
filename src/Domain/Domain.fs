@@ -23,6 +23,8 @@ type Odds = Odds of decimal
 
 type Balance = Balance of decimal
 
+type Winnings = Winnings of decimal
+
 type Bet = {
     Id : BetId
     Stake : Stake
@@ -66,6 +68,12 @@ module CmdArgs =
         BetId : BetId
     }
 
+    type SettleFreeBet = {
+        Id : BookieId
+        Result : BetResult
+        BetId : BetId
+    }
+
 type Command = 
     | AddBookie of CmdArgs.AddBookie
     | MakeDeposit of CmdArgs.MakeDeposit
@@ -73,6 +81,7 @@ type Command =
     | PlaceBackBet of CmdArgs.PlaceBackBet
     | PlaceFreeBet of CmdArgs.PlaceFreeBet
     | SettleBackBet of CmdArgs.SettleBackBet
+    | SettleFreeBet of CmdArgs.SettleFreeBet
 
 type Event =
     | BookieAdded of CmdArgs.AddBookie
@@ -81,6 +90,7 @@ type Event =
     | BackBetPlaced of CmdArgs.PlaceBackBet
     | FreeBetPlaced of CmdArgs.PlaceFreeBet
     | BackBetSettled of CmdArgs.SettleBackBet
+    | FreeBetSettled of CmdArgs.SettleFreeBet
 
 type Bookie = {
     Id : BookieId
