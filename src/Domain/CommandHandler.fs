@@ -14,12 +14,24 @@ module Mapping =
         | BookieAdded args -> "BookieAdded", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
         | DepositMade args -> "DepositMade", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
         | WithdrawalMade args -> "WithdrawalMade", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | BackBetPlaced args -> "BackBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | BackBetSettled args -> "BackBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | FreeBetPlaced args -> "FreeBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | FreeBetSettled args -> "FreeBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | LayBetPlaced args -> "LayBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | LayBetSettled args -> "LayBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
     
     let toDomainEvent data =
         match data with
         | "BookieAdded", args -> args |> CosmosDb.Serialization.objectFromJToken |> BookieAdded
         | "DepositMade", args -> args |> CosmosDb.Serialization.objectFromJToken |> DepositMade
         | "WithdrawalMade", args -> args |> CosmosDb.Serialization.objectFromJToken |> WithdrawalMade
+        | "BackBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> BackBetPlaced
+        | "BackBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> BackBetSettled
+        | "FreeBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> FreeBetPlaced
+        | "FreeBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> FreeBetSettled
+        | "LayBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetPlaced
+        | "LayBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetPlaced
         | _ -> failwith "can't handle"
 
 type EventStore = {

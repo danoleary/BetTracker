@@ -39,3 +39,6 @@ let updateBookie bookies bookieId updateFunc =
                 |> updateFunc
     let otherBookies = bookies |> List.filter (fun x -> x.Id <> bookieId)
     bookie :: otherBookies
+
+let calculateExposure (Stake stake) (Odds odds) =
+    stake * (odds - 1m)

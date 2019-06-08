@@ -74,6 +74,21 @@ module CmdArgs =
         BetId : BetId
     }
 
+    type PlaceLayBet = {
+        Id : BookieId
+        Stake : Stake
+        Odds : Odds
+        BetId : BetId
+    }
+
+    type SettleLayBet = {
+        Id : BookieId
+        Result : BetResult
+        BetId : BetId
+    }
+
+open CmdArgs
+
 type Command = 
     | AddBookie of CmdArgs.AddBookie
     | MakeDeposit of CmdArgs.MakeDeposit
@@ -82,6 +97,8 @@ type Command =
     | PlaceFreeBet of CmdArgs.PlaceFreeBet
     | SettleBackBet of CmdArgs.SettleBackBet
     | SettleFreeBet of CmdArgs.SettleFreeBet
+    | PlaceLayBet of CmdArgs.PlaceLayBet
+    | SettleLayBet of CmdArgs.SettleLayBet
 
 type Event =
     | BookieAdded of CmdArgs.AddBookie
@@ -91,6 +108,8 @@ type Event =
     | FreeBetPlaced of CmdArgs.PlaceFreeBet
     | BackBetSettled of CmdArgs.SettleBackBet
     | FreeBetSettled of CmdArgs.SettleFreeBet
+    | LayBetPlaced of CmdArgs.PlaceLayBet
+    | LayBetSettled of CmdArgs.SettleLayBet
 
 type Bookie = {
     Id : BookieId
