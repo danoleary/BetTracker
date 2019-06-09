@@ -27,6 +27,7 @@ let includedBookies = [
     Guid.Parse("41ad0a7c-0bfb-41ae-aa3c-42d50433f3cb") // 21bet
     Guid.Parse("234f675e-5314-4d5b-a78c-318ed7e64839") //the pools
     Guid.Parse("eda560dc-de49-4593-a616-2cebc48c95e9") //bwin
+    Guid.Parse("4e1e0488-1dd7-4cf4-b144-7178539e4edd") //betway
 ]
 
 let printState (desc:string) =
