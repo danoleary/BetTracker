@@ -20,6 +20,7 @@ module Mapping =
         | FreeBetSettled args -> "FreeBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
         | LayBetPlaced args -> "LayBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
         | LayBetSettled args -> "LayBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | BackBetCashedOut args -> "BackBetCashedOut", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
     
     let toDomainEvent data =
         match data with
@@ -32,11 +33,12 @@ module Mapping =
         | "FreeBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> FreeBetSettled
         | "LayBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetPlaced
         | "LayBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetPlaced
+        | "BackBetCashedOut", args -> args |> CosmosDb.Serialization.objectFromJToken |> BackBetCashedOut
         | _ -> failwith "can't handle"
 
 type EventStore = {
-    GetCurrentState : unit -> State
-    Append : Event list -> unit
+    GetCurrentState : AggregateId -> State
+    Append : String -> Event list -> unit
 }
 
 let inMemoryConfig: CosmoStore.InMemory.Configuration = {
@@ -53,18 +55,18 @@ let createDemoStore typ =
         match typ with
         | InMemory -> CosmoStore.InMemory.EventStore.getEventStore inMemoryConfig
     
-    let getCurrentState () =
-        store.GetEvents "Bookies" EventsReadRange.AllEvents
+    let getCurrentState (AggregateId aggregateId) =
+        store.GetEvents (aggregateId.ToString ()) EventsReadRange.AllEvents
         |> Async.AwaitTask
         |> Async.RunSynchronously
         |> List.map (fun x -> Mapping.toDomainEvent (x.Name, x.Data))
         |> List.fold aggregate.Apply State.Init
 
-    let append evns =
+    let append aggregateId evns =
         evns 
         |> List.map Mapping.toStoredEvent
         |> List.map (fun (name,data) -> { Id = Guid.NewGuid(); CorrelationId = (Some (Guid.NewGuid())); CausationId = (Some (Guid.NewGuid())); Name = name; Data = data; Metadata = None })
-        |> store.AppendEvents "Bookies" ExpectedPosition.Any
+        |> store.AppendEvents aggregateId ExpectedPosition.Any
         |> Async.AwaitTask
         |> Async.RunSynchronously
         |> ignore 
@@ -75,18 +77,20 @@ let createDemoStore typ =
     }
 
 let validate cmd =
-    match cmd with
+    match cmd.Payload with
     | AddBookie args -> if args.Name = "" then failwith "Gimme some name!" else cmd
     // | ChangeTaskDueDate args -> if args.DueDate.IsSome && args.DueDate.Value < DateTime.Now then failwith "Are you Marty McFly?!" else cmd
     | _ -> cmd
 
 let handleCommand (store:EventStore) command = 
     // get the latest state from store
-    let currentState = store.GetCurrentState()
+    let currentState = store.GetCurrentState command.AggregateId
     // execute command to get new events
-    let newEvents = command |> aggregate.Execute currentState
+    let newEvents = command.Payload |> aggregate.Execute currentState
+
+    let (AggregateId aggregateId) = command.AggregateId
     // store events to event store
-    newEvents |> store.Append
+    store.Append (aggregateId.ToString ()) newEvents
     // return events
     newEvents
 

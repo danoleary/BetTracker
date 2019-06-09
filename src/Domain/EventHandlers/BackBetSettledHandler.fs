@@ -4,12 +4,12 @@ open Domain
 open DomainHelpers
 
 let private calculateWinnings (Stake stake) (Odds odds) =
-    Winnings (stake * (odds - 1m))
+    Winnings (stake * odds)
 
 let private settle (evt: CmdArgs.SettleBackBet) bookie  =
     let bet: Bet = bookie.Bets
                 |> List.find (fun x -> x.Id = evt.BetId)
-                |> (fun t -> { t with Settled = Settled })
+                |> (fun t -> { t with State = Settled })
                 
     let otherBets = List.filter (fun (x: Bet) -> x.Id <> bet.Id) bookie.Bets
 

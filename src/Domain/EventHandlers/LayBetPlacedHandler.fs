@@ -8,7 +8,7 @@ let private subtractExposureFromBalance stake odds (Balance balance) =
     Balance (balance - exposure)
 
 let applyLayBetPlaced state (evt: CmdArgs.PlaceLayBet) =
-    let newBet ={ Id = evt.BetId; Settled = NotSettled;
+    let newBet ={ Id = evt.BetId; State = NotSettled;
                     Stake = evt.Stake; Odds = evt.Odds }
 
     let updateFunc = (fun t -> { t with

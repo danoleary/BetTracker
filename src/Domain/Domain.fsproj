@@ -16,6 +16,7 @@
     <Compile Include="CommandHandlers/SettleFreeBetHandler.fs" />
     <Compile Include="CommandHandlers/PlaceLayBetHandler.fs" />
     <Compile Include="CommandHandlers/SettleLayBetHandler.fs" />
+    <Compile Include="CommandHandlers/CashOutBackBetHandler.fs" />
     <Compile Include="EventHandlers/BookieAddedHandler.fs" />
     <Compile Include="EventHandlers/DepositMadeHandler.fs" />
     <Compile Include="EventHandlers/WithdrawalMadeHandler.fs" />
@@ -25,6 +26,7 @@
     <Compile Include="EventHandlers/FreeBetSettledHandler.fs" />
     <Compile Include="EventHandlers/LayBetPlacedHandler.fs" />
     <Compile Include="EventHandlers/LayBetSettledHandler.fs" />
+    <Compile Include="EventHandlers/BackBetCashedOutHandler.fs" />
     <Compile Include="Aggregate.fs" />
     <Compile Include="ReadSide.fs" />
     <Compile Include="CommandHandler.fs" />

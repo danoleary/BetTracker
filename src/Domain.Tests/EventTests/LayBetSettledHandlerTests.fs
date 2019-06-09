@@ -21,7 +21,7 @@ let ``Balance is increased by stake plus exposure bet state is settled if result
     let bookie = List.exactlyOne result.Bookies
     let bet = List.exactlyOne bookie.Bets
     Assert.Equal(Balance 150.01m, bookie.Balance)
-    Assert.Equal(Settled, bet.Settled)
+    Assert.Equal(Settled, bet.State)
     
 
 [<Fact>]
@@ -38,4 +38,4 @@ let ``Balance doesnt change and bet state is settled if result is lost`` () =
     let bookie = List.exactlyOne result.Bookies
     let bet = List.exactlyOne bookie.Bets
     Assert.Equal(Balance 0m, bookie.Balance)
-    Assert.Equal(Settled, bet.Settled)
+    Assert.Equal(Settled, bet.State)

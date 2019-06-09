@@ -10,7 +10,7 @@ let private calculateWinnings (Stake stake) odds =
 let private settle (evt: CmdArgs.SettleLayBet) bookie  =
     let bet: Bet = bookie.Bets
                 |> List.find (fun x -> x.Id = evt.BetId)
-                |> (fun t -> { t with Settled = Settled })
+                |> (fun t -> { t with State = Settled })
     let otherBets = List.filter (fun (x: Bet) -> x.Id <> bet.Id) bookie.Bets
 
     match evt.Result with

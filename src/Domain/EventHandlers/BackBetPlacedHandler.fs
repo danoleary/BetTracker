@@ -4,7 +4,7 @@ open Domain
 open DomainHelpers
 
 let applyBackBetPlaced state (evt: CmdArgs.PlaceBackBet) =
-    let newBet ={ Id = evt.BetId; Settled = NotSettled;
+    let newBet ={ Id = evt.BetId; State = NotSettled;
                     Stake = evt.Stake; Odds = evt.Odds }
 
     let updateFunc = (fun t -> { t with

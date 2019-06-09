@@ -13,9 +13,10 @@ type BetResult = Win | Lose
 
 type BetId = BetId of Guid
 
-type BetState = Settled | NotSettled
+type BetState = Settled | NotSettled | CashedOut
 
 type BookieId = BookieId of Guid
+type AggregateId = AggregateId of Guid
 
 type Stake = Stake of decimal
 
@@ -25,11 +26,13 @@ type Balance = Balance of decimal
 
 type Winnings = Winnings of decimal
 
+type CashOutAmount = CashOutAmount of decimal
+
 type Bet = {
     Id : BetId
     Stake : Stake
     Odds : Odds
-    Settled : BetState
+    State : BetState
 }
 
 module CmdArgs =
@@ -87,9 +90,13 @@ module CmdArgs =
         BetId : BetId
     }
 
-open CmdArgs
+    type CashOutBackBet = {
+        Id : BookieId
+        BetId : BetId
+        CashOutAmount : CashOutAmount
+    }
 
-type Command = 
+type CommandPayload = 
     | AddBookie of CmdArgs.AddBookie
     | MakeDeposit of CmdArgs.MakeDeposit
     | MakeWithdrawal of CmdArgs.MakeWithdrawal
@@ -99,6 +106,13 @@ type Command =
     | SettleFreeBet of CmdArgs.SettleFreeBet
     | PlaceLayBet of CmdArgs.PlaceLayBet
     | SettleLayBet of CmdArgs.SettleLayBet
+    | CashOutBackBet of CmdArgs.CashOutBackBet
+
+type Command = {
+    AggregateId : AggregateId
+    Timestamp : DateTime
+    Payload : CommandPayload
+}
 
 type Event =
     | BookieAdded of CmdArgs.AddBookie
@@ -110,6 +124,7 @@ type Event =
     | FreeBetSettled of CmdArgs.SettleFreeBet
     | LayBetPlaced of CmdArgs.PlaceLayBet
     | LayBetSettled of CmdArgs.SettleLayBet
+    | BackBetCashedOut of CmdArgs.CashOutBackBet
 
 type Bookie = {
     Id : BookieId

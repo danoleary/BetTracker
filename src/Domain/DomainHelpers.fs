@@ -19,7 +19,9 @@ let onlyIfBalanceIsHighEnoughForStake (Stake stake) bookie  =
 let onlyIfThereIsAMatchingBet (betId: BetId) (bookie: Bookie) =
     if List.exists (fun (x: Bet) -> x.Id = betId) bookie.Bets then
         bookie
-    else failwith "Can't find matching back bet"
+    else 
+        printfn "Failing bet: %A" betId
+        failwith "Can't find matching bet"
 
 let subtractStakeFromBalance (Balance balance) (Stake stake) =
     Balance (balance - stake)

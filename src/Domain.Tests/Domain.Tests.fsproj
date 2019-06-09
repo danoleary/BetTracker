@@ -18,6 +18,7 @@
     <Compile Include="CommandTests/SettleFreeBetHandlerTests.fs" />
     <Compile Include="CommandTests/PlaceLayBetHandlerTests.fs" />
     <Compile Include="CommandTests/SettleLayBetHandlerTests.fs" />
+    <Compile Include="CommandTests/CashOutBackBetHandlerTests.fs" />
     <Compile Include="EventTests/BookieAddedHandlerTests.fs" />
     <Compile Include="EventTests/DepositMadeHandlerTests.fs" />
     <Compile Include="EventTests/WithdrawalMadeHandlerTests.fs" />
@@ -27,6 +28,7 @@
     <Compile Include="EventTests/FreeBetSettledHandlerTests.fs" />
     <Compile Include="EventTests/LayBetPlacedHandlerTests.fs" />
     <Compile Include="EventTests/LayBetSettledHandlerTests.fs" />
+    <Compile Include="EventTests/BackBetCashedOutHandlerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

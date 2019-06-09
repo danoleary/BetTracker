@@ -10,7 +10,7 @@ open TestHelpers
 [<Fact>]
 let ``Bookie added event is raised if add bookie is handled`` () =
     let state: State = { Bookies = [] }
-    let addBookie: CmdArgs.AddBookie  ={ Id = createNewBookieId (); Name = "Some bookie" }
+    let addBookie: CmdArgs.AddBookie  = { Id = createNewBookieId (); Name = "Some bookie" }
     let command = AddBookie addBookie
 
     let result: Event = execute state command

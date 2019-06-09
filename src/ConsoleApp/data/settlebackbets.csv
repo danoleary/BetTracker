@@ -1,4 +1,35 @@
 BetId,BetGroupId,Bookie,BookieId,Win,Event,Date settled
-0990c0fc-19dc-47a0-9bee-f5fe6a3bed85,efca0f94-9dff-4cb1-9a18-db47e540f614,Betfred,436a7be7-7ecc-49ee-8592-8b1309d231c7,FALSE,Everton Chelsea draw,17/03/2019
-7cb5ba2c-6d31-468b-b341-ff93666299bb,83fd3df7-c350-4f2f-b3cd-d9aeff6231d8,Betfred,436a7be7-7ecc-49ee-8592-8b1309d231c7,FALSE,"Brother Bennett, Huntingdon 16:45",19/03/2019
-1fd7858b-4e44-4694-811f-ce23beec4502,7f330e9b-d726-423d-b43d-3a469604882f,Betfred,436a7be7-7ecc-49ee-8592-8b1309d231c7,TRUE,"Thiem, D v Khachanov, K First Set Total Games Over/Under 9.5 (Single)",04/04/2019
+0990c0fc-19dc-47a0-9bee-f5fe6a3bed85,efca0f94-9dff-4cb1-9a18-db47e540f614,Betfred,436a7be7-7ecc-49ee-8592-8b1309d231c7,FALSE,Everton Chelsea draw,17/03/2019 18:00:00
+1fd7858b-4e44-4694-811f-ce23beec4502,7f330e9b-d726-423d-b43d-3a469604882f,Betfred,436a7be7-7ecc-49ee-8592-8b1309d231c7,TRUE,Thiem D v Khachanov K First Set Total Games Over/Under 9.5 (Single),06/06/2019 14:00:00
+458648f2-2991-4813-a1ce-795f6473221a,a1268f59-d89f-4207-8439-2c5a8407a238,William Hill,f2c0ad88-525d-4f5c-8629-ba64ce1eb7b2,FALSE,higgins to beat trump,05/05/2019 23:00:00
+aab9367f-d05c-457d-b852-26eb814d391d,c1b155c0-3609-4ee5-a2ff-1f14d92f3027,William Hill,f2c0ad88-525d-4f5c-8629-ba64ce1eb7b2,TRUE,arbine Muguruza v Johanna Larsson - Total Match Games,27/05/2019 19:38:00
+436873b1-11db-4169-bcbb-9d1f0d74009e,80742b68-7c03-4cd2-a362-e543255a5c7d,William Hill,f2c0ad88-525d-4f5c-8629-ba64ce1eb7b2,TRUE,Mali U20 v France U20 - Draw No Bet,31/05/2019 19:24:00
+7e1c8498-6079-47a8-a33b-7722dfabc8d2,c60740a8-28f9-4e07-9870-cc7852135ad0,William Hill,f2c0ad88-525d-4f5c-8629-ba64ce1eb7b2,TRUE,Guillermo Garcia-Lopez/David Marrero v Marco Bortolotti/Scott Puodziunas - Match Betting,04/06/2019 08:55:00
+34db8ef1-8514-4989-b1da-0d4b7ddc4d3d,07222722-064a-47d8-b3af-996ec4479cbd,William Hill,f2c0ad88-525d-4f5c-8629-ba64ce1eb7b2,TRUE,Nao Hibino v Timea Bacsinszky - Total Match Games,05/06/2019 01:08:12
+277a9739-7034-46f2-b6d9-bdcbdf687348,fe5dc4be-5976-44d6-9ebd-050158da87c0,William Hill,f2c0ad88-525d-4f5c-8629-ba64ce1eb7b2,TRUE,rob cross to beat gerwyn price,21/03/2019 15:00:00
+d79f6096-9ab3-4814-b592-e274badcc57e,f836337f-6470-4308-842b-04c460b52e52,William Hill,f2c0ad88-525d-4f5c-8629-ba64ce1eb7b2,FALSE,England (Women) v Denmark (Women) - Both Teams To Score,25/05/2019 18:00:00
+346858a7-7187-498c-98c1-02e370219b91,acd53ce8-e5ed-4769-9818-bae4b6f36e53,William Hill,f2c0ad88-525d-4f5c-8629-ba64ce1eb7b2,FALSE,Deportivo La Coruna v Cordoba - 2nd Half Over/Under 1.5 Goals,08/06/2019 22:12:00
+8094c5e2-ddfa-440c-a65c-6088efc45f72,9203db75-6b24-4fca-ae2f-16bd1c05e39f,Moplay,8fc21e32-0e85-4047-a2fe-51b5a8f6c911,TRUE,the dubai way,18/03/2019 14:20:00
+f3ca66c3-778d-45c5-b85b-b99c6c8833d9,74830508-97fd-4959-8ffc-ef04c71db1db,Moplay,8fc21e32-0e85-4047-a2fe-51b5a8f6c911,FALSE,everton burnley btts,03/05/2019 22:48:00
+235940d0-4f36-4dbe-b8c1-ce0a5a743d32,0a0553b4-a56f-431f-a540-78411f3e5280,Netbet,5b0c957a-6d0c-4003-be12-66c7fd9350ba,FALSE,matt hopp to beat raymond,21/03/2019 15:00:00
+457675f5-f0cd-4e0f-9a42-baf3e4c71ec1,0338908d-e529-41c0-b855-16dcc034060b,K8,d0c83809-5614-4d10-b05d-9f4da75fc8c1,FALSE,austria poland draw,21/03/2019 11:00:00
+ed02a876-78d9-45ea-af69-24256bb5fac6,7187e0e8-7121-4838-91a9-53c719cbdbc2,comeon,1478766f-8480-46a7-8134-d35a3d64017f,TRUE,btts rochdale scunthorpe,23/03/2019 17:44:00
+bba8bf73-bc86-4033-8f69-c61cf6b38982,40358283-f534-4236-9e14-2daa8715d5d1,Betvictor,ac133ab6-99b8-4690-880d-50b092f12c78,FALSE,bonne question wetherby,19/03/2019 11:00:00
+7677494d-0713-466d-aa42-db734b80f2ee,ff1588ad-b615-46d6-94e4-0e2f707c903c,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,FALSE,leicester to beat newcastle,12/04/2019 00:00:00
+86ec42b3-bdfe-4bd8-ae89-3cae536a0087,05e5bdab-b504-4e08-8294-647ebaa9b070,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,TRUE,chelsea to beat prageue,11/04/2019 09:32:00
+46dd063e-9cf2-4bd3-b8a2-4418b94636de,f23666b1-6488-4347-bf3b-930d145d960b,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,TRUE,barnsley to beat fleetwood,13/04/2019 00:00:00
+6c1c67e7-3e8a-43c2-a17e-4f5a649f6dab,f30f7a60-ea17-4f7b-839f-7bd6a8d74441,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,FALSE,port vale to beat exeter,13/04/2019 00:00:00
+89abfae6-7fa5-493e-b3ba-4cf17076fc81,6f19bd0f-4be6-487b-978a-fddfee52ab2a,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,FALSE,nantes psg draw,17/04/2019 00:00:00
+220c48af-4b31-45b5-a619-50e12ed414b2,41c830ec-d6eb-40c1-a4da-b446206efea6,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,FALSE,udinese to beat roma,13/04/2019 00:00:00
+7c7d7ef3-dc59-496d-9603-aada947a422d,a17cb584-c1e4-41ad-8c21-d45d86cd482a,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,FALSE,betis to beat sevilla,13/04/2019 00:00:00
+451a3f28-6036-4ba1-9396-a2575b7c3bd4,a9934e9d-f22e-4012-985e-c0b2af206afc,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,FALSE,brighton to beat bournemouth,13/04/2019 15:00:00
+28588b43-9246-4424-96d8-8fc31b6f52df,13f3aa65-30c6-48c8-8e9f-596ec0b200a1,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,TRUE,arsenal to beat watford,15/04/2019 15:00:00
+51ed288d-fd65-41f1-b944-ca44c28585ca,281e7f6a-6e2e-4c5e-bac0-dcbd9f3073c4,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,TRUE,celta vigo to beat girona,20/04/2019 00:00:00
+14b3f158-93b0-4ff3-bdd3-9cbc7c9933f7,206d3607-2284-4849-8083-18e1d55d2171,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,TRUE,augsberg to beat stutgart,20/04/2019 00:00:00
+e56b8a4e-a9bc-4d45-acec-66ba5ea49dcc,7785cd9c-9518-4d0d-9127-385912f1ee16,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,TRUE,ajax juve draw,10/04/2019 22:00:00
+4e136199-24f8-4021-838c-5eea4b7631e2,f4c59d6d-4478-4f81-8b60-7f0bec005b69,boylesports,904c9199-8b81-4a96-af9e-c7d83317ab0c,FALSE,benfica frankfurt draw,11/04/2019 00:00:00
+588ff73a-fd60-4359-a422-b3ec7959f05e,cc9d55f0-c8dc-4c92-a638-a44848eeee88,Betvictor,ac133ab6-99b8-4690-880d-50b092f12c78,TRUE,No - Both Teams to Score Cremonese v Brescia,04/05/2019 16:51:00
+b3f191f8-6714-4fdf-a0a7-4e554f8a633f,9c966622-39d9-459d-b55d-6bc6d84de3d4,Betvictor,ac133ab6-99b8-4690-880d-50b092f12c78,TRUE,Both Teams to Score Malmo FF v AFC Eskilstuna,25/05/2019 17:48:00
+8f9d537f-04b6-4dda-bb68-85b870597722,e186aa76-2403-481e-ba2b-f44ac6b52539,Betvictor,ac133ab6-99b8-4690-880d-50b092f12c78,FALSE,Both Teams to Score Beijing Guoan v Changchun Yatai,29/05/2019 14:11:00
+cd05db95-e378-49b9-9589-5949b5fa2901,f78e4ccb-c413-4413-b8df-6c1e0106a409,Betvictor,ac133ab6-99b8-4690-880d-50b092f12c78,TRUE,Both Teams to Score El Entag El Harby v Wadi Degla FC,03/06/2019 21:45:00
+ea21cdae-17e0-47cf-b4b2-bd3b59846c1e,93419d98-c675-4506-96a0-ac82c2a9a809,Betvictor,ac133ab6-99b8-4690-880d-50b092f12c78,FALSE,Both Teams to Score Wydad Casablanca v Olympique Khouribga,05/06/2019 01:40:00
