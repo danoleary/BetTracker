@@ -3,10 +3,14 @@ module DomainHelpers
 open Domain
 
 let onlyIfBookieExists state i =
-    printf "%A" i
-    match state.Bookies |> List.tryFind (fun x -> x.Id = i) with
-    | Some bookie -> bookie
-    | None -> failwith "Bookie does not exist"
+    match state with
+    | Bookie b -> b
+    | EmptyState -> failwith "Bookie does not exist"
+
+let ifNotEmpty state evt func: State =
+        match state with
+        | Bookie bookie -> func bookie evt
+        | EmptyState -> failwith "state is empty"
 
 let onlyIfBalanceIsHighEnoughForWithdrawal (TransactionAmount amount) bookie  =
     if bookie.Balance >= Balance amount then
@@ -34,13 +38,6 @@ let addWinningsToBalance (Balance balance) (Winnings winnings) =
 
 let addAmountToBalance (Balance balance) (TransactionAmount amount) =
     Balance (balance + amount)
-
-let updateBookie bookies bookieId updateFunc =
-    let bookie = bookies
-                |> List.find (fun x -> x.Id = bookieId)
-                |> updateFunc
-    let otherBookies = bookies |> List.filter (fun x -> x.Id <> bookieId)
-    bookie :: otherBookies
 
 let calculateExposure (Stake stake) (Odds odds) =
     stake * (odds - 1m)

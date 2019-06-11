@@ -12,7 +12,7 @@ let ``Free bet placed is raised`` () =
     let id = createNewBookieId ()
     let state = bookieCreatedState id
     let placeFreeBet: CmdArgs.PlaceFreeBet =
-        { Id = id; Stake = Stake 100m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
+        { Stake = Stake 100m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
     let command = PlaceFreeBet placeFreeBet
 
     let result: Event = execute state command

@@ -4,14 +4,15 @@ open Domain
 open DomainHelpers
 
 let applyBackBetPlaced state (evt: CmdArgs.PlaceBackBet) =
-    let newBet ={ Id = evt.BetId; State = NotSettled;
-                    Stake = evt.Stake; Odds = evt.Odds }
+        ifNotEmpty
+                state
+                evt
+                (fun bookie evt ->
+                        let newBet ={ Id = evt.BetId; State = NotSettled;
+                                        Stake = evt.Stake; Odds = evt.Odds }
 
-    let updateFunc = (fun t -> { t with
-                                    Balance = subtractStakeFromBalance t.Balance evt.Stake;
-                                    Bets = newBet :: t.Bets })
-    { state with Bookies =
-                    (updateBookie
-                        state.Bookies
-                        evt.Id
-                        updateFunc) }
+                        Bookie { bookie with
+                                    Balance = subtractStakeFromBalance bookie.Balance evt.Stake;
+                                    Bets = newBet :: bookie.Bets })
+   
+

@@ -4,6 +4,6 @@ open Domain
 open DomainHelpers
 
 let handlePlaceFreeBet state (cmd: CmdArgs.PlaceFreeBet) =
-    cmd.Id
+    cmd
     |> onlyIfBookieExists state
     |> (fun _ -> FreeBetPlaced cmd)

@@ -9,13 +9,16 @@ open TestHelpers
 
 [<Fact>]
 let ``State contains one new bookie after bookie added event is applied`` () =
-    let state: State = { Bookies = [] }
-    let args: CmdArgs.AddBookie  ={ Id = createNewBookieId (); Name = "Some bookie" }
+    let state: State = EmptyState
+    let args: CmdArgs.AddBookie  ={ BookieId = createNewBookieId (); Name = "Some bookie" }
     let event = BookieAdded args
 
     let result = apply state event
 
-    let bookie = List.exactlyOne result.Bookies
-    Assert.Equal(args.Id, bookie.Id)
-    Assert.Equal(args.Name, bookie.Name)
-    Assert.Equal(Balance 0m, bookie.Balance)
+    match result with
+    | Bookie bookie ->
+            Assert.Equal(Balance 0m, bookie.Balance)
+            Assert.Equal(0, bookie.Bets.Length)
+            Assert.Equal(args.Name, bookie.Name)
+    | _ -> failwith "failed"
+    

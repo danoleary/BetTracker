@@ -12,7 +12,7 @@ let ``Back bet placed is raised if the total balance is greater than the stake``
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100.00m)
     let placeBackBet: CmdArgs.PlaceBackBet =
-        { Id = id; Stake = Stake 100m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ())) } 
+        { Stake = Stake 100m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ())) } 
     let command = PlaceBackBet placeBackBet
 
     let result: Event = execute state command
@@ -29,7 +29,7 @@ let ``No events are raised if the total balance is less than the stake`` () =
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100.00m)
     let placeBackBet: CmdArgs.PlaceBackBet =
-        { Id = id; Stake = Stake 100.01m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
+        { Stake = Stake 100.01m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
     let command = PlaceBackBet placeBackBet
 
     let methodCall = (fun () -> (execute state command) |> ignore)

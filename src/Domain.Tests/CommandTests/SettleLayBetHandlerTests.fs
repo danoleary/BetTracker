@@ -12,7 +12,7 @@ let ``no events raised if there is no matching lay bet`` () =
     let id = createNewBookieId ()
     let state = bookieCreatedState id
     let settleLayBet: CmdArgs.SettleLayBet =
-        { Id = id; Result = Win; BetId = (BetId (Guid.NewGuid())) } 
+        { Result = Win; BetId = (BetId (Guid.NewGuid())) } 
     let command = SettleLayBet settleLayBet
 
     let methodCall = (fun () -> (execute state command) |> ignore)
@@ -25,7 +25,7 @@ let ``lay bet settled raised if there is a matching lay bet`` () =
     let betId = createNewBetId ()
     let state = layBetPlacedState bookieId betId (TransactionAmount 50m) (Stake 50m) (Odds 2m)
     let settleLayBet: CmdArgs.SettleLayBet =
-        { Id = bookieId; Result = Win; BetId = betId } 
+        { Result = Win; BetId = betId } 
     let command = SettleLayBet settleLayBet
 
     let result: Event = execute state command

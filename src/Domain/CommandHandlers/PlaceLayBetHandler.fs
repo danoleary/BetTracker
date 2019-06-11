@@ -9,7 +9,7 @@ let private onlyIfBalanceHighEnough stake odds bookie =
     if balance >= exposure then bookie else failwith "Can't place lay bet"
 
 let handlePlaceLayBet state (cmd: CmdArgs.PlaceLayBet) =
-    cmd.Id
+    cmd
     |> onlyIfBookieExists state
     |> onlyIfBalanceHighEnough cmd.Stake cmd.Odds
     |> (fun _ -> LayBetPlaced cmd)

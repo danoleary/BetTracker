@@ -12,7 +12,7 @@ let ``Lay bet placed is raised if the total balance is greater than the exposure
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100.00m)
     let placeLayBet: CmdArgs.PlaceLayBet =
-        { Id = id; Stake = Stake 100m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ())) } 
+        { Stake = Stake 100m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ())) } 
     let command = PlaceLayBet placeLayBet
 
     let result: Event = execute state command
@@ -29,7 +29,7 @@ let ``No events are raised if the total balance is less than the exposure`` () =
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 99.99m)
     let placeLayBet: CmdArgs.PlaceLayBet =
-        { Id = id; Stake = Stake 100.0m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
+        { Stake = Stake 100.0m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
     let command = PlaceLayBet placeLayBet
 
     let methodCall = (fun () -> (execute state command) |> ignore)

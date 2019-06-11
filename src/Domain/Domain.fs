@@ -37,61 +37,52 @@ type Bet = {
 
 module CmdArgs =
     type AddBookie = {
-        Id : BookieId
+        BookieId : BookieId
         Name : string
     }
 
     type MakeDeposit = {
-        Id : BookieId
         Transaction : Transaction
     }
 
     type MakeWithdrawal = {
-        Id : BookieId
         Transaction : Transaction
     }
 
     type PlaceBackBet = {
-        Id : BookieId
         Stake : Stake
         Odds : Odds
         BetId : BetId
     }
 
     type PlaceFreeBet = {
-        Id : BookieId
         Stake : Stake
         Odds : Odds
         BetId : BetId
     }
 
     type SettleBackBet = {
-        Id : BookieId
         Result : BetResult
         BetId : BetId
     }
 
     type SettleFreeBet = {
-        Id : BookieId
         Result : BetResult
         BetId : BetId
     }
 
     type PlaceLayBet = {
-        Id : BookieId
         Stake : Stake
         Odds : Odds
         BetId : BetId
     }
 
     type SettleLayBet = {
-        Id : BookieId
         Result : BetResult
         BetId : BetId
     }
 
     type CashOutBackBet = {
-        Id : BookieId
         BetId : BetId
         CashOutAmount : CashOutAmount
     }
@@ -126,6 +117,7 @@ type Event =
     | LayBetSettled of CmdArgs.SettleLayBet
     | BackBetCashedOut of CmdArgs.CashOutBackBet
 
+
 type Bookie = {
     Id : BookieId
     Name : string
@@ -133,10 +125,6 @@ type Bookie = {
     Bets : Bet list
 }
 
-type State = {
-    Bookies : Bookie list
-}
+type State = EmptyState | Bookie of Bookie
     with 
-        static member Init = {
-            Bookies = []
-        }
+        static member Init = EmptyState

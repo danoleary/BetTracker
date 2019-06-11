@@ -2,7 +2,6 @@
 open Domain
 open Domain.CmdArgs
 open FSharp.Data
-open System.Globalization
 
 let eventStore = CommandHandler.createDemoStore CommandHandler.StorageType.InMemory
 
@@ -28,6 +27,13 @@ let includedBookies = [
     Guid.Parse("234f675e-5314-4d5b-a78c-318ed7e64839") //the pools
     Guid.Parse("eda560dc-de49-4593-a616-2cebc48c95e9") //bwin
     Guid.Parse("4e1e0488-1dd7-4cf4-b144-7178539e4edd") //betway
+    Guid.Parse("144dca29-b091-46ab-8051-01ed9b707924") //expekt
+    Guid.Parse("8404c586-8299-443d-8762-6c001206d935") //138.com
+    Guid.Parse("9153c15c-2a0c-41fd-8b91-ec0491475b35") //betstars
+    Guid.Parse("e22d4048-eab0-407e-bca7-81cb9ee7ca39") //jenningsbet
+    Guid.Parse("49405d6b-925a-413a-96e7-62dd721386f4") //blacktype
+    Guid.Parse("b14a8f3f-b5d0-4b25-9661-8ffb6aa84304") //dafabet
+    Guid.Parse("fabce6ca-52c4-4638-893f-d8f54d5d46fe") //12bet
 ]
 
 let printState (desc:string) =
@@ -65,7 +71,7 @@ let main argv =
             fun x -> {  AggregateId = AggregateId x.Id;
                         Timestamp = DateTime.Today.AddYears(-10);
                         Payload = AddBookie {
-                                    Id = BookieId x.Id;
+                                    BookieId = BookieId x.Id;
                                     Name = x.Name }})
                             
     let depositCommands =
@@ -76,7 +82,6 @@ let main argv =
                                 AggregateId = AggregateId x.Id;
                                 Timestamp = DateTime.Parse(x.Timestamp);
                                 Payload = MakeDeposit {
-                                            Id = BookieId x.Id;
                                             Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount (decimal x.Amount) } }})
 
     let withdrawalCommands =
@@ -87,7 +92,6 @@ let main argv =
                                 AggregateId = AggregateId x.Id;
                                 Timestamp = DateTime.Parse(x.Timestamp);
                                 Payload = MakeWithdrawal {
-                                            Id = BookieId x.Id;
                                             Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount x.Amount } }})
 
     let placeBackBetCommands =
@@ -98,7 +102,6 @@ let main argv =
                                 AggregateId = AggregateId x.BookieId;
                                 Timestamp = DateTime.Parse(x.``Date placed``);
                                 Payload = PlaceBackBet {
-                                            Id = BookieId x.BookieId;
                                             Stake =  Stake x.Stake;
                                             Odds = Odds x.Odds;
                                             BetId = BetId x.BetId }})
@@ -111,7 +114,6 @@ let main argv =
                                 AggregateId = AggregateId x.BookieId;
                                 Timestamp = DateTime.Parse(x.``Date settled``);
                                 Payload = SettleBackBet {
-                                            Id = BookieId x.BookieId;
                                             Result = if x.Win then Win else Lose;
                                             BetId = BetId x.BetId }})
 
@@ -123,7 +125,6 @@ let main argv =
                                 AggregateId = AggregateId x.BookieId;
                                 Timestamp = DateTime.Parse(x.``Date placed``);
                                 Payload = PlaceFreeBet {
-                                            Id = BookieId x.BookieId;
                                             Stake =  Stake x.Stake;
                                             Odds = Odds x.Odds;
                                             BetId = BetId x.BetId }})
@@ -136,7 +137,6 @@ let main argv =
                                 AggregateId = AggregateId x.BookieId;
                                 Timestamp = DateTime.Parse(x.``Date settled``);
                                 Payload = SettleFreeBet {
-                                            Id = BookieId x.BookieId;
                                             Result = if x.Win then Win else Lose;
                                             BetId = BetId x.BetId }})
 
@@ -149,13 +149,10 @@ let main argv =
                                 AggregateId = AggregateId x.BookieId
                                 Timestamp = new DateTime(2019, 06, 03, 20, 43, 0)
                                 Payload = CashOutBackBet {
-                                            Id = BookieId x.BookieId;
                                             CashOutAmount = CashOutAmount x.CashOutAmount;
                                             BetId = BetId x.BetId }})
 
     let allCommands =
-        // Seq.concat [addBookieCommands; depositCommands; withdrawalCommands; placeBackBetCommands;
-        //             settleBackBetCommands]
         Seq.concat [addBookieCommands; depositCommands; placeBackBetCommands; settleBackBetCommands;
                     withdrawalCommands; placeFreeBetCommands; settleFreeBetCommands; cashoutbackbets ]                
         |> Seq.filter (fun x -> 

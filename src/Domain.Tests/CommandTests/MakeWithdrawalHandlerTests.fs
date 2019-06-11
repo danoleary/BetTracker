@@ -12,7 +12,7 @@ let ``Withdrawal made is raised if withdrawal is the total balance is equal to t
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100m)
     let makeWithdrawal: CmdArgs.MakeWithdrawal =
-        { Id = id; Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 100m } } 
+        { Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 100m } } 
     let command = MakeWithdrawal makeWithdrawal
 
     let result: Event = execute state command
@@ -26,7 +26,7 @@ let ``Withdrawal made is raised if withdrawal is the total balance is greater th
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100m)
     let makeWithdrawal: CmdArgs.MakeWithdrawal =
-        { Id = id; Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 99.99m } } 
+        { Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 99.99m } } 
     let command = MakeWithdrawal makeWithdrawal
 
     let result: Event = execute state command
@@ -40,7 +40,7 @@ let ``No events are raised if withdrawal is the total balance is less than the w
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100.00m)
     let makeWithdrawal: CmdArgs.MakeWithdrawal =
-        { Id = id; Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 100.01m } } 
+        { Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 100.01m } } 
     let command = MakeWithdrawal makeWithdrawal
 
     let methodCall = (fun () -> (execute state command) |> ignore)

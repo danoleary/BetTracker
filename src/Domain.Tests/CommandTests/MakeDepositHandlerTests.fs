@@ -9,9 +9,9 @@ open TestHelpers
 
 [<Fact>]
 let ``No event is raised if make deposit is handled before add bookie`` () =
-    let state: State = { Bookies = [] }
+    let state: State = EmptyState
     let args: CmdArgs.MakeDeposit =
-        { Id = createNewBookieId (); Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 100.0m } } 
+        { Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 100.0m } } 
     let command = MakeDeposit args
 
     let methodCall = (fun () -> (execute state command) |> ignore)
@@ -23,7 +23,7 @@ let ``Deposit made is raised if deposit is made after bookie created`` () =
     let id = createNewBookieId ()
     let state = bookieCreatedState id
     let makeDeposit: CmdArgs.MakeDeposit =
-        { Id = id; Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 100.0m } } 
+        { Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount 100.0m } } 
     let command = MakeDeposit makeDeposit
 
     let result: Event = execute state command

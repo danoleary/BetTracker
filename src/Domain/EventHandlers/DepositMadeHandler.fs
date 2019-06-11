@@ -4,6 +4,7 @@ open Domain
 open DomainHelpers
 
 let applyDepositMade state (evt: CmdArgs.MakeDeposit) =
-    let updateFunc =
-        (fun t -> { t with Balance = addAmountToBalance t.Balance evt.Transaction.Amount })
-    { state with Bookies = (updateBookie state.Bookies evt.Id updateFunc)}
+    ifNotEmpty
+        state
+        evt
+        (fun bookie evt -> Bookie { bookie with Balance = addAmountToBalance bookie.Balance evt.Transaction.Amount })  

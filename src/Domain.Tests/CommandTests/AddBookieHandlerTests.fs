@@ -1,6 +1,5 @@
 module AddBookieHandlerTests
 
-open System
 open Xunit
 open Domain
 open Aggregate
@@ -9,12 +8,12 @@ open TestHelpers
 
 [<Fact>]
 let ``Bookie added event is raised if add bookie is handled`` () =
-    let state: State = { Bookies = [] }
-    let addBookie: CmdArgs.AddBookie  = { Id = createNewBookieId (); Name = "Some bookie" }
+    let state: State = EmptyState
+    let addBookie: CmdArgs.AddBookie  = { BookieId = createNewBookieId (); Name = "Some bookie" }
     let command = AddBookie addBookie
 
     let result: Event = execute state command
 
     match result with
-    | BookieAdded args -> Assert.True(args.Id = addBookie.Id && args.Name = addBookie.Name)
+    | BookieAdded args -> Assert.True(args.Name = addBookie.Name)
     | _ -> failwith "incorrect event"

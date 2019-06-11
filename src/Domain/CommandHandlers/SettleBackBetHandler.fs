@@ -4,7 +4,7 @@ open Domain
 open DomainHelpers
 
 let handleSettleBackBet state (cmd: CmdArgs.SettleBackBet) =
-    cmd.Id
+    cmd
     |> onlyIfBookieExists state
     |> onlyIfThereIsAMatchingBet cmd.BetId
     |> (fun _ -> BackBetSettled cmd)

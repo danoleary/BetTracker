@@ -12,7 +12,7 @@ let ``no events raised if there is no matching free bet`` () =
     let id = createNewBookieId ()
     let state = bookieCreatedState id
     let settleFreeBet: CmdArgs.SettleFreeBet =
-        { Id = id; Result = Win; BetId = (BetId (Guid.NewGuid())) } 
+        { Result = Win; BetId = (BetId (Guid.NewGuid())) } 
     let command = SettleFreeBet settleFreeBet
 
     let methodCall = (fun () -> (execute state command) |> ignore)
@@ -25,7 +25,7 @@ let ``free bet settled raised if there is a matching back bet`` () =
     let betId = createNewBetId ()
     let state = backBetPlacedState bookieId betId (TransactionAmount 50m) (Stake 50m) (Odds 2m)
     let settleFreeBet: CmdArgs.SettleFreeBet =
-        { Id = bookieId; Result = Win; BetId = betId } 
+        { Result = Win; BetId = betId } 
     let command = SettleFreeBet settleFreeBet
 
     let result: Event = execute state command
