@@ -6,5 +6,5 @@ open DomainHelpers
 let handlePlaceBackBet state (cmd: CmdArgs.PlaceBackBet) =
     cmd
     |> onlyIfBookieExists state
-    |> onlyIfBalanceIsHighEnoughForStake cmd.Stake
+    |> onlyIfBalanceIsHighEnoughForStake cmd.Stake cmd.BetId
     |> (fun _ -> BackBetPlaced cmd)

@@ -34,6 +34,11 @@ let includedBookies = [
     Guid.Parse("49405d6b-925a-413a-96e7-62dd721386f4") //blacktype
     Guid.Parse("b14a8f3f-b5d0-4b25-9661-8ffb6aa84304") //dafabet
     Guid.Parse("fabce6ca-52c4-4638-893f-d8f54d5d46fe") //12bet
+    Guid.Parse("2a1a9de1-f184-4da2-b87c-e5b48e8169db") //ladbrokes
+    Guid.Parse("5eff672c-350c-41c0-b1b0-f485b18b36ea") //totesport
+    Guid.Parse("cb3b6171-b957-4e41-9860-4308de03b093") //sportingbet
+    Guid.Parse("be55614c-1b25-4c95-a8e7-8146471470fa") //starsports
+    Guid.Parse("160e8048-4830-46f5-959d-893a46e24052") //bet365
 ]
 
 let printState (desc:string) =
@@ -164,5 +169,5 @@ let main argv =
 
     Seq.iter (fun x -> x |> pipeline) allCommands
 
-    printState "After task added"
+    printState "After"
     0
