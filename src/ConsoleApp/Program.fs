@@ -39,6 +39,24 @@ let includedBookies = [
     Guid.Parse("cb3b6171-b957-4e41-9860-4308de03b093") //sportingbet
     Guid.Parse("be55614c-1b25-4c95-a8e7-8146471470fa") //starsports
     Guid.Parse("160e8048-4830-46f5-959d-893a46e24052") //bet365
+    Guid.Parse("be62db7c-2481-4eef-a685-203fcf86af71") //unibet
+    Guid.Parse("c4564c9d-22a8-49b4-b30d-455ad82cbfcb") //fansbet
+    Guid.Parse("f4b368b5-d546-4030-a5c5-0647771602ac") //mansionbet
+    Guid.Parse("03ace3c2-51b9-4511-8cb4-8ae61fb1fafd") //10bet
+    Guid.Parse("5d9cb0b5-8ed4-4b5f-b5cc-096670ff0dd4") //paddypower
+    Guid.Parse("fb6fcbb2-4222-487e-86f8-e269ec962538") //vbet
+    Guid.Parse("96b35237-1129-4bdd-81f1-1cb593aa688d") //mobilebet
+    Guid.Parse("fc8ed4ef-acfb-4ac2-877e-81eed86d1b1e") //novibet
+    Guid.Parse("28d6d57c-046d-4157-ae66-e7ba9fafbb78") //mr green
+    Guid.Parse("52a2d5b9-a570-4841-b5e0-622a3c41b894") //royal panda
+    Guid.Parse("1c29d6dc-ad55-4735-8549-846e291ac634") //m88
+    Guid.Parse("83328743-6a9c-42ea-b605-d6d8dcefc775") //bet at home
+    Guid.Parse("b0f87a6a-4cda-4410-a2df-b437a0ae99a1") //marathon
+    Guid.Parse("37732383-57c7-4ef1-810b-fc10dff68490") //skybet
+    Guid.Parse("f79c95f8-939f-4cf4-8d1b-e36e11378e93") //betsafe
+    Guid.Parse("6cb47278-300d-415f-8ffd-15205886d989") //coral
+    Guid.Parse("89a69c43-d3c0-43ee-8e35-0fb87ba687ed") //betvision
+    Guid.Parse("14a57318-1a32-4131-a6db-080846920684") //energybet
 ]
 
 let printState (desc:string) =
