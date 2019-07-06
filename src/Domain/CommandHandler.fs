@@ -21,6 +21,7 @@ module Mapping =
         | LayBetPlaced args -> "LayBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
         | LayBetSettled args -> "LayBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
         | BackBetCashedOut args -> "BackBetCashedOut", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | BonusCredited args -> "BonusCredited", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
     
     let toDomainEvent data =
         match data with
@@ -32,8 +33,9 @@ module Mapping =
         | "FreeBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> FreeBetPlaced
         | "FreeBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> FreeBetSettled
         | "LayBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetPlaced
-        | "LayBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetPlaced
+        | "LayBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetSettled
         | "BackBetCashedOut", args -> args |> CosmosDb.Serialization.objectFromJToken |> BackBetCashedOut
+        | "BonusCredited", args -> args |> CosmosDb.Serialization.objectFromJToken |> BonusCredited
         | _ -> failwith "can't handle"
 
 type EventStore = {

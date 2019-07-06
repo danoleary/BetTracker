@@ -21,6 +21,9 @@ open SettleLayBetHandler
 open LayBetSettledHandler
 open CashOutBackBetHandler
 open BackBetCashedOutHandler
+open CreditBonusHandler
+open BonusCreditedHandler
+open Domain.CmdArgs
 
 type Aggregate<'state, 'command, 'event> = {
     Init : 'state
@@ -29,6 +32,7 @@ type Aggregate<'state, 'command, 'event> = {
 }
 
 let execute state command = 
+    printfn "executing command: %A" command
     match command with
     | AddBookie args -> handleAddBookie state args
     | MakeDeposit args -> handleMakeDeposit state args
@@ -40,6 +44,7 @@ let execute state command =
     | PlaceLayBet args -> handlePlaceLayBet state args
     | SettleLayBet args -> handleSettleLayBet state args
     | CashOutBackBet args -> handleCashOutBackBet state args
+    | CreditBonus args -> handleCreditBonus state args
 
 let apply state event = 
     match event with
@@ -53,6 +58,7 @@ let apply state event =
     | LayBetPlaced args -> applyLayBetPlaced state args
     | LayBetSettled args -> applyLayBetSettled state args
     | BackBetCashedOut args -> applyBackBetCashedOut state args
+    | BonusCredited args -> applyBonusCredited state args
 
 let aggregate = {
     Init = State.Init

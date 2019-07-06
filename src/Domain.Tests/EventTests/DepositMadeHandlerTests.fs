@@ -17,12 +17,12 @@ let ``Balance is increased by transaction amount after deposit made event is app
     let id = createNewBookieId ()
     let state = bookieCreatedState id
     let args: CmdArgs.MakeDeposit =
-        { Transaction = { Timestamp = DateTime.Now; Amount = TransactionAmount 100.0m }}
+        { Transaction = TransactionAmount 100.0m }
     let event = DepositMade args
 
     let result = apply state event
 
     match result with
     | Bookie bookie ->
-            Assert.True(amountAndBalanceAreEqual bookie.Balance args.Transaction.Amount)
+            Assert.True(amountAndBalanceAreEqual bookie.Balance args.Transaction)
     | _ -> failwith "failed"

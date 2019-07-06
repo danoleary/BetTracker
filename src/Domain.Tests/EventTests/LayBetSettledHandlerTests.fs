@@ -8,7 +8,7 @@ open Domain.CmdArgs
 open TestHelpers
 
 [<Fact>]
-let ``Balance is increased by stake plus exposure bet state is settled if result is won`` () =
+let ``Balance is increased by stake plus exposure minus bet state is settled if result is won`` () =
     let bookieId = createNewBookieId ()
     let betId = BetId (Guid.NewGuid ())
     let state = layBetPlacedState bookieId betId (TransactionAmount 100.01m) (Stake 50m) (Odds 2m)

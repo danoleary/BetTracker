@@ -57,6 +57,8 @@ let includedBookies = [
     Guid.Parse("6cb47278-300d-415f-8ffd-15205886d989") //coral
     Guid.Parse("89a69c43-d3c0-43ee-8e35-0fb87ba687ed") //betvision
     Guid.Parse("14a57318-1a32-4131-a6db-080846920684") //energybet
+    //Guid.Parse("b239164f-e52b-4577-9af3-727ea91257cc") //betfair //TODO bets
+    Guid.Parse("3a67dee0-d855-48b1-a25f-b7ceead5525e") //smarkets //TODO bets
 ]
 
 let printState (desc:string) =
@@ -80,6 +82,12 @@ type SettleFreeBets =
     CsvProvider<"/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/settlefreebets.csv">
 type CashOutBackBets =
     CsvProvider<"/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/cashoutbackbets.csv">
+type PlaceLayBets =
+    CsvProvider<"/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/placelaybets.csv">
+type SettleLayBets =
+    CsvProvider<"/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/settlelaybets.csv">
+type CreditBonuses =
+    CsvProvider<"/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/creditbonuses.csv">
 
 
 
@@ -105,7 +113,7 @@ let main argv =
                                 AggregateId = AggregateId x.Id;
                                 Timestamp = DateTime.Parse(x.Timestamp);
                                 Payload = MakeDeposit {
-                                            Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount (decimal x.Amount) } }})
+                                            Transaction = TransactionAmount (decimal x.Amount) } })
 
     let withdrawalCommands =
         Withdrawals
@@ -115,7 +123,7 @@ let main argv =
                                 AggregateId = AggregateId x.Id;
                                 Timestamp = DateTime.Parse(x.Timestamp);
                                 Payload = MakeWithdrawal {
-                                            Transaction = { Timestamp = DateTime.UtcNow; Amount = TransactionAmount x.Amount } }})
+                                            Transaction = TransactionAmount x.Amount } })
 
     let placeBackBetCommands =
         PlaceBackBets
@@ -163,7 +171,7 @@ let main argv =
                                             Result = if x.Win then Win else Lose;
                                             BetId = BetId x.BetId }})
 
-    let cashoutbackbets =
+    let cashoutbackbetCommands =
         CashOutBackBets
             .Load("https://docs.google.com/spreadsheets/d/1yJGP-7Rx2yrV1FGz7zzWOZK6AScCOqUtyVHELKpQ0mE/export?exportFormat=csv")
             .Rows
@@ -174,16 +182,53 @@ let main argv =
                                 Payload = CashOutBackBet {
                                             CashOutAmount = CashOutAmount x.CashOutAmount;
                                             BetId = BetId x.BetId }})
+                                           
+    let placelaybetCommands =
+        PlaceLayBets
+            .Load("https://docs.google.com/spreadsheets/d/1pyMZ4cdRcUF99v-tGAk8Y-JaP06BPv6V5cTyAhCWVqE/export?exportFormat=csv")
+            .Rows
+        |> Seq.map (fun x -> 
+                                {
+                                AggregateId = AggregateId x.BookieId
+                                Timestamp = DateTime.Parse(x.``Date placed``)
+                                Payload = PlaceLayBet {
+                                            Stake =  Stake x.Stake;
+                                            Odds = Odds x.Odds;
+                                            BetId = BetId x.BetId }})   
+
+    let settlelaybetCommands =
+        SettleLayBets
+            .Load("https://docs.google.com/spreadsheets/d/1gM_CAmsAUBjmI4bvG6nc9kEhig-O44xzXPlXxY7Ke5M/export?exportFormat=csv")
+            .Rows
+        |> Seq.map (fun x -> 
+                                {
+                                AggregateId = AggregateId x.BookieId
+                                Timestamp = DateTime.Parse(x.``Date settled``)
+                                Payload = SettleLayBet {
+                                            Result = if x.Win then Win else Lose;
+                                            BetId = BetId x.BetId }})
+
+    let creditBonusCommands =
+        CreditBonuses
+            .Load("/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/creditbonuses.csv")
+            .Rows
+        |> Seq.map (fun x -> 
+                                {
+                                AggregateId = AggregateId x.BookieId
+                                Timestamp = DateTime.Parse(x.Timestamp)
+                                Payload = CreditBonus 
+                                            { Amount = TransactionAmount x.Amount  }})                       
 
     let allCommands =
         Seq.concat [addBookieCommands; depositCommands; placeBackBetCommands; settleBackBetCommands;
-                    withdrawalCommands; placeFreeBetCommands; settleFreeBetCommands; cashoutbackbets ]                
+                    withdrawalCommands; placeFreeBetCommands; settleFreeBetCommands; cashoutbackbetCommands;
+                    creditBonusCommands; placelaybetCommands; settlelaybetCommands ]                
         |> Seq.filter (fun x -> 
             let (AggregateId aggId) = x.AggregateId 
             (List.contains aggId includedBookies))
-        |> Seq.sortBy (fun x -> x.Timestamp)
+        |> Seq.sortBy (fun x -> x.Timestamp)       
 
-    Seq.iter (fun x -> printfn "%A, %A" x.Timestamp (x.Payload.GetType ()))  allCommands          
+    Seq.iter (fun x -> printfn "%A, %A" x.Timestamp (x.Payload.GetType ()))  allCommands 
 
     Seq.iter (fun x -> x |> pipeline) allCommands
 

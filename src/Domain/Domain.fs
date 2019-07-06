@@ -4,11 +4,6 @@ open System
 
 type TransactionAmount = TransactionAmount of decimal
 
-type Transaction = {
-    Timestamp : DateTime
-    Amount : TransactionAmount
-}
-
 type BetResult = Win | Lose
 
 type BetId = BetId of Guid
@@ -42,11 +37,11 @@ module CmdArgs =
     }
 
     type MakeDeposit = {
-        Transaction : Transaction
+        Transaction : TransactionAmount
     }
 
     type MakeWithdrawal = {
-        Transaction : Transaction
+        Transaction : TransactionAmount
     }
 
     type PlaceBackBet = {
@@ -87,6 +82,10 @@ module CmdArgs =
         CashOutAmount : CashOutAmount
     }
 
+    type CreditBonus = {
+        Amount : TransactionAmount
+    }
+
 type CommandPayload = 
     | AddBookie of CmdArgs.AddBookie
     | MakeDeposit of CmdArgs.MakeDeposit
@@ -98,6 +97,7 @@ type CommandPayload =
     | PlaceLayBet of CmdArgs.PlaceLayBet
     | SettleLayBet of CmdArgs.SettleLayBet
     | CashOutBackBet of CmdArgs.CashOutBackBet
+    | CreditBonus of CmdArgs.CreditBonus
 
 type Command = {
     AggregateId : AggregateId
@@ -116,6 +116,7 @@ type Event =
     | LayBetPlaced of CmdArgs.PlaceLayBet
     | LayBetSettled of CmdArgs.SettleLayBet
     | BackBetCashedOut of CmdArgs.CashOutBackBet
+    | BonusCredited of CmdArgs.CreditBonus
 
 
 type Bookie = {
