@@ -114,7 +114,7 @@ let main argv =
                                 AggregateId = AggregateId x.Id;
                                 Timestamp = DateTime.Parse(x.Timestamp);
                                 Payload = MakeDeposit {
-                                            Transaction = TransactionAmount (decimal x.Amount) } })
+                                            Amount = TransactionAmount (decimal x.Amount) } })
 
     let withdrawalCommands =
         Withdrawals
@@ -124,7 +124,7 @@ let main argv =
                                 AggregateId = AggregateId x.Id;
                                 Timestamp = DateTime.Parse(x.Timestamp);
                                 Payload = MakeWithdrawal {
-                                            Transaction = TransactionAmount x.Amount } })
+                                            Amount = TransactionAmount x.Amount } })
 
     let placeBackBetCommands =
         PlaceBackBets

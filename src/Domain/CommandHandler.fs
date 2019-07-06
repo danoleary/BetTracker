@@ -5,6 +5,7 @@ open System.Collections.Concurrent
 open Domain
 open Aggregate
 open CosmoStore
+open Dtos
 
 module Mapping = 
     open Newtonsoft.Json.Linq
@@ -78,13 +79,99 @@ let createDemoStore typ =
         Append = append
     }
 
-let validate cmd =
-    match cmd.Payload with
-    | AddBookie args -> if args.Name = "" then failwith "Gimme some name!" else cmd
-    // | ChangeTaskDueDate args -> if args.DueDate.IsSome && args.DueDate.Value < DateTime.Now then failwith "Are you Marty McFly?!" else cmd
-    | _ -> cmd
+let validate (cmd: CommandDto): Command =
+    match cmd with
+    | :? AddBookieDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.AddBookie {
+            Name = dto.Name
+            BookieId = BookieId cmd.AggregateId
+        }
+     }
+    | :? MakeDepositDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.MakeDeposit {
+            Amount = TransactionAmount dto.Amount
+        }
+     }
+    | :? MakeWithdrawalDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.MakeWithdrawal {
+            Amount = TransactionAmount dto.Amount
+        }
+     }
+    | :? PlaceBackBetDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.PlaceBackBet {
+            BetId = BetId dto.BetId
+            Stake = Stake dto.Stake
+            Odds = Odds dto.Odds
+        }
+     }
+    | :? PlaceFreeBetDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.PlaceFreeBet {
+            BetId = BetId dto.BetId
+            Stake = Stake dto.Stake
+            Odds = Odds dto.Odds
+        }
+     }
+    | :? PlaceLayBetDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.PlaceFreeBet {
+            BetId = BetId dto.BetId
+            Stake = Stake dto.Stake
+            Odds = Odds dto.Odds
+        }
+     }
+    | :? SettleBackBetDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.SettleBackBet {
+            BetId = BetId dto.BetId
+            Result = dto.Result
+        }
+     }
+    | :? SettleFreeBetDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.SettleFreeBet {
+            BetId = BetId dto.BetId
+            Result = dto.Result
+        }
+     }
+    | :? SettleLayBetDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.SettleLayBet {
+            BetId = BetId dto.BetId
+            Result = dto.Result
+        }
+     }
+    | :? CashOutBackBetDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.CashOutBackBet {
+            BetId = BetId dto.BetId
+            CashOutAmount = CashOutAmount dto.Amount
+        }
+     }
+    | :? CreditBonusDto as dto -> { 
+        AggregateId = AggregateId dto.AggregateId;
+        Timestamp = dto.Timestamp;
+        Payload = Domain.CreditBonus {
+            Amount = TransactionAmount dto.Amount
+        }
+     }
+    | _ -> failwith "unknown type"
 
-let handleCommand (store:EventStore) command: Result<Event list, CommandExecutionError> =
+let handleCommand (store:EventStore) (command: Command): Result<Event list, CommandExecutionError> =
     // get the latest state from store
     let currentState = store.GetCurrentState command.AggregateId
     // execute command to get new events
@@ -102,7 +189,10 @@ let handleCommand (store:EventStore) command: Result<Event list, CommandExecutio
 
     
 
-let handle (store: EventStore) (cmd: Command) = 
+let handle (store: EventStore) (cmd: CommandDto) = 
     cmd 
     |> validate 
     |> handleCommand store
+
+let getCurrentState (eventStore: EventStore) (aggId: Guid) =
+    eventStore.GetCurrentState (AggregateId aggId)

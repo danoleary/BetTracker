@@ -8,4 +8,4 @@ let applyWithdrawlMade state (evt: CmdArgs.MakeWithdrawal) =
         state
         evt
         (fun bookie evt ->
-            Bookie { bookie with Balance = subtractAmountFromBalance bookie.Balance evt.Transaction })  
+            Bookie { bookie with Balance = subtractAmountFromBalance bookie.Balance evt.Amount })  

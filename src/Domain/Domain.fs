@@ -43,11 +43,11 @@ module CmdArgs =
     }
 
     type MakeDeposit = {
-        Transaction : TransactionAmount
+        Amount : TransactionAmount
     }
 
     type MakeWithdrawal = {
-        Transaction : TransactionAmount
+        Amount : TransactionAmount
     }
 
     type PlaceBackBet = {
