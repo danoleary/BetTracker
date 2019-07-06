@@ -23,15 +23,15 @@ open CashOutBackBetHandler
 open BackBetCashedOutHandler
 open CreditBonusHandler
 open BonusCreditedHandler
-open Domain.CmdArgs
+open Result
 
-type Aggregate<'state, 'command, 'event> = {
+type Aggregate<'state, 'command, 'event, 'commandExecutionError> = {
     Init : 'state
     Apply: 'state -> 'event -> 'state
-    Execute: 'state -> 'command -> 'event list
+    Execute: 'state -> 'command -> Result<'event list, 'commandExecutionError>
 }
 
-let execute state command = 
+let execute state command: Result<Event, CommandExecutionError> = 
     printfn "executing command: %A" command
     match command with
     | AddBookie args -> handleAddBookie state args
@@ -62,6 +62,6 @@ let apply state event =
 
 let aggregate = {
     Init = State.Init
-    Execute = fun s c -> execute s c |> List.singleton
+    Execute = fun s c -> execute s c |> map List.singleton
     Apply = apply
 }

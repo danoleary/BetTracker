@@ -15,10 +15,10 @@ let ``Lay bet placed is raised if the total balance is greater than the exposure
         { Stake = Stake 100m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ())) } 
     let command = PlaceLayBet placeLayBet
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | LayBetPlaced args ->
+    | Ok (LayBetPlaced args) ->
         Assert.True(args.BetId = placeLayBet.BetId)
         Assert.True(args.Odds = placeLayBet.Odds)
         Assert.True(args.Stake = placeLayBet.Stake)
@@ -32,6 +32,8 @@ let ``No events are raised if the total balance is less than the exposure`` () =
         { Stake = Stake 100.0m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
     let command = PlaceLayBet placeLayBet
 
-    let methodCall = (fun () -> (execute state command) |> ignore)
+    let result = execute state command
 
-    Assert.Throws<Exception>(methodCall)
+    match result with
+    | Error (BalanceNotHighEnoughError _) -> Assert.True(true)
+    | _ -> failwith "execution didnt error"

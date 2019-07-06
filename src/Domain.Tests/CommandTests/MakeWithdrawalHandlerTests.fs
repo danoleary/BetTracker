@@ -15,10 +15,10 @@ let ``Withdrawal made is raised if withdrawal is the total balance is equal to t
         { Transaction = TransactionAmount 100m }
     let command = MakeWithdrawal makeWithdrawal
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | WithdrawalMade args -> Assert.True(args.Transaction = makeWithdrawal.Transaction)
+    | Ok (WithdrawalMade args) -> Assert.True(args.Transaction = makeWithdrawal.Transaction)
     | _ -> failwith "incorrect event"
 
 [<Fact>]
@@ -29,10 +29,10 @@ let ``Withdrawal made is raised if withdrawal is the total balance is greater th
         { Transaction = TransactionAmount 99.99m }
     let command = MakeWithdrawal makeWithdrawal
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | WithdrawalMade args -> Assert.True(args.Transaction = makeWithdrawal.Transaction)
+    | Ok(WithdrawalMade args) -> Assert.True(args.Transaction = makeWithdrawal.Transaction)
     | _ -> failwith "incorrect event"
 
 [<Fact>]
@@ -43,6 +43,8 @@ let ``No events are raised if withdrawal is the total balance is less than the w
         { Transaction = TransactionAmount 100.01m }
     let command = MakeWithdrawal makeWithdrawal
 
-    let methodCall = (fun () -> (execute state command) |> ignore)
+    let result = execute state command
 
-    Assert.Throws<Exception>(methodCall)
+    match result with
+    | Error (BalanceNotHighEnoughError _) -> Assert.True(true)
+    | _ -> failwith "execution didnt error"

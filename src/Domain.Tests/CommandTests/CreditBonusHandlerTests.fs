@@ -12,8 +12,8 @@ let ``Bonus credited event is raised if bookie exists`` () =
     let creditBonus: CmdArgs.CreditBonus  = { Amount = TransactionAmount 10m }
     let command = CreditBonus creditBonus
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | BonusCredited args -> Assert.True(args.Amount = creditBonus.Amount)
+    | Ok (BonusCredited args) -> Assert.True(args.Amount = creditBonus.Amount)
     | _ -> failwith "incorrect event"

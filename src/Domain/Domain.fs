@@ -2,6 +2,12 @@ module Domain
 
 open System
 
+type CommandExecutionError =
+    | BookieAlreadyExistsError
+    | BookieDoesNotExistError
+    | NoMatchingBetError
+    | BalanceNotHighEnoughError of decimal
+
 type TransactionAmount = TransactionAmount of decimal
 
 type BetResult = Win | Lose

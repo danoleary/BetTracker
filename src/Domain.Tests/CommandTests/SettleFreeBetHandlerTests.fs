@@ -15,9 +15,11 @@ let ``no events raised if there is no matching free bet`` () =
         { Result = Win; BetId = (BetId (Guid.NewGuid())) } 
     let command = SettleFreeBet settleFreeBet
 
-    let methodCall = (fun () -> (execute state command) |> ignore)
+    let result = execute state command
 
-    Assert.Throws<Exception>(methodCall)
+    match result with
+    | Error (NoMatchingBetError _) -> Assert.True(true)
+    | _ -> failwith "execution didnt error"
 
 [<Fact>]
 let ``free bet settled raised if there is a matching back bet`` () =
@@ -28,10 +30,10 @@ let ``free bet settled raised if there is a matching back bet`` () =
         { Result = Win; BetId = betId } 
     let command = SettleFreeBet settleFreeBet
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | FreeBetSettled args ->
+    | Ok (FreeBetSettled args) ->
         Assert.True(args.BetId = settleFreeBet.BetId)
         Assert.True(args.Result = settleFreeBet.Result)
     | _ -> failwith "incorrect event"

@@ -12,8 +12,8 @@ let ``Bookie added event is raised if add bookie is handled`` () =
     let addBookie: CmdArgs.AddBookie  = { BookieId = createNewBookieId (); Name = "Some bookie" }
     let command = AddBookie addBookie
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | BookieAdded args -> Assert.True(args.Name = addBookie.Name)
+    | Ok (BookieAdded args) -> Assert.True(args.Name = addBookie.Name)
     | _ -> failwith "incorrect event"

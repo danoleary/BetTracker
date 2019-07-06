@@ -1,11 +1,11 @@
 module SettleFreeBetHandler
 
+open Result
 open Domain
 open DomainHelpers
-
 
 let handleSettleFreeBet state (cmd: CmdArgs.SettleFreeBet) =
     cmd
     |> onlyIfBookieExists state
-    |> onlyIfThereIsAMatchingBet cmd.BetId
-    |> (fun _ -> FreeBetSettled cmd)
+    |> bind (onlyIfThereIsAMatchingBet cmd.BetId)
+    |> map (fun _ -> FreeBetSettled cmd)

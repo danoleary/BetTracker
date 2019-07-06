@@ -15,9 +15,11 @@ let ``no events raised if there is no matching lay bet`` () =
         { Result = Win; BetId = (BetId (Guid.NewGuid())) } 
     let command = SettleLayBet settleLayBet
 
-    let methodCall = (fun () -> (execute state command) |> ignore)
+    let result = execute state command
 
-    Assert.Throws<Exception>(methodCall)
+    match result with
+    | Error (NoMatchingBetError _) -> Assert.True(true)
+    | _ -> failwith "execution didnt error"
 
 [<Fact>]
 let ``lay bet settled raised if there is a matching lay bet`` () =
@@ -28,10 +30,10 @@ let ``lay bet settled raised if there is a matching lay bet`` () =
         { Result = Win; BetId = betId } 
     let command = SettleLayBet settleLayBet
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | LayBetSettled args ->
+    | Ok (LayBetSettled args) ->
         Assert.True(args.BetId = settleLayBet.BetId)
         Assert.True(args.Result = settleLayBet.Result)
     | _ -> failwith "incorrect event"

@@ -15,10 +15,10 @@ let ``Free bet placed is raised`` () =
         { Stake = Stake 100m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
     let command = PlaceFreeBet placeFreeBet
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | FreeBetPlaced args ->
+    | Ok (FreeBetPlaced args) ->
         Assert.True(args.BetId = placeFreeBet.BetId)
         Assert.True(args.Odds = placeFreeBet.Odds)
         Assert.True(args.Stake = placeFreeBet.Stake)

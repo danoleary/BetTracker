@@ -2,10 +2,10 @@ module DomainHelpers
 
 open Domain
 
-let onlyIfBookieExists state i =
+let onlyIfBookieExists state cmd =
     match state with
-    | Bookie b -> b
-    | EmptyState -> failwith "Bookie does not exist"
+    | Bookie b -> Ok b
+    | EmptyState -> Error BookieDoesNotExistError
 
 let ifNotEmpty state evt func: State =
         match state with
@@ -13,21 +13,22 @@ let ifNotEmpty state evt func: State =
         | EmptyState -> failwith "state is empty"
 
 let onlyIfBalanceIsHighEnoughForWithdrawal (TransactionAmount amount) bookie  =
-    if bookie.Balance >= Balance amount then
-        bookie
-    else failwith "Can't make withdrawl, balance not high enough"
+    let (Balance balance) = bookie.Balance
+    if balance >= amount then
+        Ok bookie
+    else Error (BalanceNotHighEnoughError balance)
 
-let onlyIfBalanceIsHighEnoughForStake (Stake stake) (BetId betId) bookie  =
-    
-    if bookie.Balance >= Balance stake
-        then bookie
-        else failwith "Can't place back bet"
+let onlyIfBalanceIsHighEnoughForStake (Stake stake)  bookie  =
+    let (Balance balance) = bookie.Balance
+    if balance >= stake
+        then Ok bookie
+        else Error (BalanceNotHighEnoughError balance)
 
 let onlyIfThereIsAMatchingBet (betId: BetId) (bookie: Bookie) =
     if List.exists (fun (x: Bet) -> x.Id = betId) bookie.Bets then
-        bookie
+        Ok bookie
     else 
-        failwith "Can't find matching bet"
+        Error NoMatchingBetError
 
 let subtractStakeFromBalance (Balance balance) (Stake stake) =
     Balance (balance - stake)

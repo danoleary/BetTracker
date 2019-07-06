@@ -14,9 +14,11 @@ let ``No event is raised if make deposit is handled before add bookie`` () =
         { Transaction = TransactionAmount 100.0m }
     let command = MakeDeposit args
 
-    let methodCall = (fun () -> (execute state command) |> ignore)
+    let result = execute state command
 
-    Assert.Throws<Exception>(methodCall)
+    match result with
+    | Error BookieDoesNotExistError -> Assert.True(true)
+    | _ -> failwith "execution didnt error"
 
 [<Fact>]
 let ``Deposit made is raised if deposit is made after bookie created`` () =
@@ -26,8 +28,8 @@ let ``Deposit made is raised if deposit is made after bookie created`` () =
         { Transaction = TransactionAmount 100.0m } 
     let command = MakeDeposit makeDeposit
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | DepositMade args -> Assert.True(args.Transaction = makeDeposit.Transaction)
+    | Ok (DepositMade args) -> Assert.True(args.Transaction = makeDeposit.Transaction)
     | _ -> failwith "incorrect event"

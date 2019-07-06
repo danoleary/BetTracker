@@ -1,10 +1,11 @@
 module MakeWithdrawalHandler
 
+open Result
 open Domain
 open DomainHelpers
 
 let handleMakeWithdrawal state (cmd: CmdArgs.MakeWithdrawal) =
     cmd
     |> onlyIfBookieExists state
-    |> onlyIfBalanceIsHighEnoughForWithdrawal cmd.Transaction
-    |> (fun _ -> WithdrawalMade cmd)
+    |> bind (onlyIfBalanceIsHighEnoughForWithdrawal cmd.Transaction)
+    |> map (fun _ -> WithdrawalMade cmd)

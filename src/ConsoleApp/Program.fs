@@ -6,9 +6,10 @@ open FSharp.Data
 let eventStore = CommandHandler.createDemoStore CommandHandler.StorageType.InMemory
 
 let pipeline cmd =
-    cmd
-    |> CommandHandler.handle eventStore
-    |> List.iter ReadSide.handle
+    let r = cmd |> CommandHandler.handle eventStore
+    match r with
+    | Ok x -> List.iter ReadSide.handle x
+    | _ -> ()
 
 let includedBookies = [
     Guid.Parse("436a7be7-7ecc-49ee-8592-8b1309d231c7") //betfred
@@ -228,9 +229,8 @@ let main argv =
             (List.contains aggId includedBookies))
         |> Seq.sortBy (fun x -> x.Timestamp)       
 
-    Seq.iter (fun x -> printfn "%A, %A" x.Timestamp (x.Payload.GetType ()))  allCommands 
-
-    Seq.iter (fun x -> x |> pipeline) allCommands
+    allCommands
+    |> Seq.iter (fun x -> x |> pipeline)
 
     printState "After"
     0

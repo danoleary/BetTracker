@@ -84,17 +84,23 @@ let validate cmd =
     // | ChangeTaskDueDate args -> if args.DueDate.IsSome && args.DueDate.Value < DateTime.Now then failwith "Are you Marty McFly?!" else cmd
     | _ -> cmd
 
-let handleCommand (store:EventStore) command = 
+let handleCommand (store:EventStore) command: Result<Event list, CommandExecutionError> =
     // get the latest state from store
     let currentState = store.GetCurrentState command.AggregateId
     // execute command to get new events
-    let newEvents = command.Payload |> aggregate.Execute currentState
+    let newEvents: Result<Event list, CommandExecutionError> =
+        command.Payload |> aggregate.Execute currentState
 
-    let (AggregateId aggregateId) = command.AggregateId
-    // store events to event store
-    store.Append (aggregateId.ToString ()) newEvents
-    // return events
-    newEvents
+    match newEvents with
+    | Ok events ->
+        let (AggregateId aggregateId) = command.AggregateId
+        // store events to event store
+        store.Append (aggregateId.ToString ()) events
+        // return events
+        Ok events
+    | Error failure -> Error failure
+
+    
 
 let handle (store: EventStore) (cmd: Command) = 
     cmd 

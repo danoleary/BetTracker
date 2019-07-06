@@ -15,9 +15,11 @@ let ``no events raised if there is no matching back bet`` () =
         { CashOutAmount = CashOutAmount 97.0m; BetId = (BetId (Guid.NewGuid())) } 
     let command = CashOutBackBet cashOutBackBet
 
-    let methodCall = (fun () -> (execute state command) |> ignore)
+    let result = execute state command
 
-    Assert.Throws<Exception>(methodCall)
+    match result with
+    | Error NoMatchtingBackBetError -> Assert.True(true)
+    | _ -> failwith "execution didnt error"
 
 [<Fact>]
 let ``back bet cashed out raised if there is a matching back bet`` () =
@@ -28,10 +30,10 @@ let ``back bet cashed out raised if there is a matching back bet`` () =
         { CashOutAmount = CashOutAmount 45.0m; BetId = betId } 
     let command = CashOutBackBet cashOutBackBet
 
-    let result: Event = execute state command
+    let result = execute state command
 
     match result with
-    | BackBetCashedOut args ->
+    | Ok (BackBetCashedOut args) ->
         Assert.True(args.BetId = cashOutBackBet.BetId)
         Assert.True(args.CashOutAmount = cashOutBackBet.CashOutAmount)
     | _ -> failwith "incorrect event"
