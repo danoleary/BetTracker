@@ -10,7 +10,7 @@ let bookieCreatedState id =
 
 let depositMadeState id amount =
     let state = bookieCreatedState id
-    let event = DepositMade { Transaction = amount }
+    let event = DepositMade { Amount = amount }
     apply state event
 
 let backBetPlacedState bookieId betId deposit stake odds =

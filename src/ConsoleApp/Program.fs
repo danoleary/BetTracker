@@ -1,15 +1,10 @@
 ﻿open System
 open Domain
-open Domain.CmdArgs
 open FSharp.Data
-
-let eventStore = CommandHandler.createDemoStore CommandHandler.StorageType.InMemory
-
-let pipeline cmd =
-    let r = cmd |> CommandHandler.handle eventStore
-    match r with
-    | Ok x -> List.iter ReadSide.handle x
-    | _ -> ()
+open Dtos
+open System.Net.Http
+open Newtonsoft.Json
+open System.Text
 
 let includedBookies = [
     Guid.Parse("436a7be7-7ecc-49ee-8592-8b1309d231c7") //betfred
@@ -62,11 +57,6 @@ let includedBookies = [
     Guid.Parse("3a67dee0-d855-48b1-a25f-b7ceead5525e") //smarkets //TODO bets
 ]
 
-let printState (desc:string) =
-    List.iter
-        (fun x -> eventStore.GetCurrentState (AggregateId x) |> printfn "[%s] %A" (desc.ToUpper()))
-        includedBookies
-
 type Bookies =
     CsvProvider<"/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/bookies.csv">
 type Deposits =
@@ -90,6 +80,7 @@ type SettleLayBets =
 type CreditBonuses =
     CsvProvider<"/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/creditbonuses.csv">
 
+let toResult win = if win then Win else Lose
 
 
 [<EntryPoint>]
@@ -99,138 +90,103 @@ let main argv =
         Bookies
             .Load("https://docs.google.com/spreadsheets/d/13AXqyemjgob_DoqN84jUxnrJDHqcBtuGvHAchjR5BMI/export?exportFormat=csv")
             .Rows
-        |> Seq.map (
-            fun x -> {  AggregateId = AggregateId x.Id;
-                        Timestamp = DateTime.Today.AddYears(-10);
-                        Payload = AddBookie {
-                                    BookieId = BookieId x.Id;
-                                    Name = x.Name }})
+        |> Seq.map (fun x -> AddBookieDto(x.Id, DateTime.Today.AddYears(-10), x.Name) :> CommandDto)
                             
     let depositCommands =
         Deposits
             .Load("https://docs.google.com/spreadsheets/d/1vK_8HtQHRDSpoMQmapPQY6kg3JHVfFDCoNLFNg6Ck8s/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> {
-                                AggregateId = AggregateId x.Id;
-                                Timestamp = DateTime.Parse(x.Timestamp);
-                                Payload = MakeDeposit {
-                                            Amount = TransactionAmount (decimal x.Amount) } })
+        |> Seq.map (fun x -> MakeDepositDto(x.Id, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDto)
 
     let withdrawalCommands =
         Withdrawals
             .Load("https://docs.google.com/spreadsheets/d/1ofH2vj_uaiwcDG_26DFyln5RwkXwTgjSJJVsLUfrbNg/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> { 
-                                AggregateId = AggregateId x.Id;
-                                Timestamp = DateTime.Parse(x.Timestamp);
-                                Payload = MakeWithdrawal {
-                                            Amount = TransactionAmount x.Amount } })
+        |> Seq.map (fun x -> MakeWithdrawalDto(x.Id, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDto)
 
     let placeBackBetCommands =
         PlaceBackBets
             .Load("https://docs.google.com/spreadsheets/d/1xhHtOQNb1mm-r-UWFHxdiK4tewjXPrLKPz6P1dvXcfE/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> {
-                                AggregateId = AggregateId x.BookieId;
-                                Timestamp = DateTime.Parse(x.``Date placed``);
-                                Payload = PlaceBackBet {
-                                            Stake =  Stake x.Stake;
-                                            Odds = Odds x.Odds;
-                                            BetId = BetId x.BetId }})
+        |> Seq.map (fun x -> PlaceBackBetDto(x.BookieId, DateTime.Parse(x.``Date placed``), x.BetId, x.Stake, x.Odds) :> CommandDto)
 
     let settleBackBetCommands =
         SettleBackBets
             .Load("https://docs.google.com/spreadsheets/d/1TlZ6aPSJRyW_5-YSbNp9KQ_kEarFUrue9t9HtPbFdDY/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> {
-                                AggregateId = AggregateId x.BookieId;
-                                Timestamp = DateTime.Parse(x.``Date settled``);
-                                Payload = SettleBackBet {
-                                            Result = if x.Win then Win else Lose;
-                                            BetId = BetId x.BetId }})
+        |> Seq.map (fun x -> SettleBackBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDto)
 
     let placeFreeBetCommands =
         PlaceFreeBets
             .Load("https://docs.google.com/spreadsheets/d/1StGsS86PuitnzfgCxipWUIIOJU2kr5Aq6uwL6eJXOPk/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> {
-                                AggregateId = AggregateId x.BookieId;
-                                Timestamp = DateTime.Parse(x.``Date placed``);
-                                Payload = PlaceFreeBet {
-                                            Stake =  Stake x.Stake;
-                                            Odds = Odds x.Odds;
-                                            BetId = BetId x.BetId }})
+        |> Seq.map (fun x -> PlaceFreeBetDto(x.BookieId, DateTime.Parse(x.``Date placed``), x.BetId, x.Stake, x.Odds) :> CommandDto)
 
     let settleFreeBetCommands =
         SettleBackBets
             .Load("https://docs.google.com/spreadsheets/d/1aM7Kz2EFm0Iy3f_k-tP79xW-AyC136kHDT3qir54XCo/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> {
-                                AggregateId = AggregateId x.BookieId;
-                                Timestamp = DateTime.Parse(x.``Date settled``);
-                                Payload = SettleFreeBet {
-                                            Result = if x.Win then Win else Lose;
-                                            BetId = BetId x.BetId }})
+        |> Seq.map (fun x -> SettleFreeBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDto)
 
     let cashoutbackbetCommands =
         CashOutBackBets
             .Load("https://docs.google.com/spreadsheets/d/1yJGP-7Rx2yrV1FGz7zzWOZK6AScCOqUtyVHELKpQ0mE/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> 
-                                {
-                                AggregateId = AggregateId x.BookieId
-                                Timestamp = new DateTime(2019, 06, 03, 20, 43, 0)
-                                Payload = CashOutBackBet {
-                                            CashOutAmount = CashOutAmount x.CashOutAmount;
-                                            BetId = BetId x.BetId }})
+        |> Seq.map (fun x -> CashOutBackBetDto(x.BookieId, DateTime(2019, 06, 03, 20, 43, 0), x.BetId, x.CashOutAmount) :> CommandDto)
                                            
     let placelaybetCommands =
         PlaceLayBets
             .Load("https://docs.google.com/spreadsheets/d/1pyMZ4cdRcUF99v-tGAk8Y-JaP06BPv6V5cTyAhCWVqE/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> 
-                                {
-                                AggregateId = AggregateId x.BookieId
-                                Timestamp = DateTime.Parse(x.``Date placed``)
-                                Payload = PlaceLayBet {
-                                            Stake =  Stake x.Stake;
-                                            Odds = Odds x.Odds;
-                                            BetId = BetId x.BetId }})   
+        |> Seq.map (fun x -> PlaceLayBetDto(x.BookieId, DateTime.Parse(x.``Date placed``), x.BetId, x.Stake, x.Odds) :> CommandDto) 
 
     let settlelaybetCommands =
         SettleLayBets
             .Load("https://docs.google.com/spreadsheets/d/1gM_CAmsAUBjmI4bvG6nc9kEhig-O44xzXPlXxY7Ke5M/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> 
-                                {
-                                AggregateId = AggregateId x.BookieId
-                                Timestamp = DateTime.Parse(x.``Date settled``)
-                                Payload = SettleLayBet {
-                                            Result = if x.Win then Win else Lose;
-                                            BetId = BetId x.BetId }})
+        |> Seq.map (fun x -> SettleLayBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDto)
 
     let creditBonusCommands =
         CreditBonuses
             .Load("/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/creditbonuses.csv")
             .Rows
-        |> Seq.map (fun x -> 
-                                {
-                                AggregateId = AggregateId x.BookieId
-                                Timestamp = DateTime.Parse(x.Timestamp)
-                                Payload = CreditBonus 
-                                            { Amount = TransactionAmount x.Amount  }})                       
+        |> Seq.map (fun x -> CreditBonusDto(x.BookieId, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDto)                    
 
-    let allCommands =
+    let allCommands: seq<CommandDto> =
         Seq.concat [addBookieCommands; depositCommands; placeBackBetCommands; settleBackBetCommands;
                     withdrawalCommands; placeFreeBetCommands; settleFreeBetCommands; cashoutbackbetCommands;
                     creditBonusCommands; placelaybetCommands; settlelaybetCommands ]                
-        |> Seq.filter (fun x -> 
-            let (AggregateId aggId) = x.AggregateId 
-            (List.contains aggId includedBookies))
+        |> Seq.filter (fun x -> (List.contains x.AggregateId includedBookies))
         |> Seq.sortBy (fun x -> x.Timestamp)       
 
-    allCommands
-    |> Seq.iter (fun x -> x |> pipeline)
+    let postCommand (payload: CommandDto) = async { 
+            let client = new  HttpClient()
+            let json = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json")
+            let endpoint = match payload with
+                            | :? AddBookieDto -> "addbookie"
+                            | :? MakeDepositDto -> "makedeposit"
+                            | :? MakeWithdrawalDto -> "makewithdrawal"
+                            | :? PlaceBackBetDto -> "placebackbet"
+                            | :? SettleBackBetDto -> "settlebackbet"
+                            | :? PlaceFreeBetDto -> "placefreebet"
+                            | :? SettleFreeBetDto -> "settlefreebet"
+                            | :? PlaceLayBetDto -> "placelaybet"
+                            | :? SettleLayBetDto -> "settlelaybet"
+                            | :? CashOutBackBetDto -> "cashoutbackbet"
+                            | :? CreditBonusDto -> "creditbonus"
+            let! response = client.PostAsync(
+                                sprintf "http://localhost:5000/api/commands/%s" endpoint,
+                                json)                         
+                            |> Async.AwaitTask
+            if (not response.IsSuccessStatusCode) then 
+                printfn "%A" payload
+                printfn "%A" response.ReasonPhrase
+                failwith "command failed"
+                                              
+            return ()               
+        }
 
-    printState "After"
+    allCommands
+    |> Seq.iter (fun x -> postCommand x |> Async.RunSynchronously)
+
     0

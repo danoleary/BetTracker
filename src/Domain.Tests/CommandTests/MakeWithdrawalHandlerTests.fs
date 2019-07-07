@@ -12,13 +12,13 @@ let ``Withdrawal made is raised if withdrawal is the total balance is equal to t
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100m)
     let makeWithdrawal: CmdArgs.MakeWithdrawal =
-        { Transaction = TransactionAmount 100m }
+        { Amount = TransactionAmount 100m }
     let command = MakeWithdrawal makeWithdrawal
 
     let result = execute state command
 
     match result with
-    | Ok (WithdrawalMade args) -> Assert.True(args.Transaction = makeWithdrawal.Transaction)
+    | Ok (WithdrawalMade args) -> Assert.True(args.Amount = makeWithdrawal.Amount)
     | _ -> failwith "incorrect event"
 
 [<Fact>]
@@ -26,13 +26,13 @@ let ``Withdrawal made is raised if withdrawal is the total balance is greater th
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100m)
     let makeWithdrawal: CmdArgs.MakeWithdrawal =
-        { Transaction = TransactionAmount 99.99m }
+        { Amount = TransactionAmount 99.99m }
     let command = MakeWithdrawal makeWithdrawal
 
     let result = execute state command
 
     match result with
-    | Ok(WithdrawalMade args) -> Assert.True(args.Transaction = makeWithdrawal.Transaction)
+    | Ok(WithdrawalMade args) -> Assert.True(args.Amount = makeWithdrawal.Amount)
     | _ -> failwith "incorrect event"
 
 [<Fact>]
@@ -40,7 +40,7 @@ let ``No events are raised if withdrawal is the total balance is less than the w
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100.00m)
     let makeWithdrawal: CmdArgs.MakeWithdrawal =
-        { Transaction = TransactionAmount 100.01m }
+        { Amount = TransactionAmount 100.01m }
     let command = MakeWithdrawal makeWithdrawal
 
     let result = execute state command

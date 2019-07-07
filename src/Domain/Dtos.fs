@@ -3,6 +3,7 @@ module Dtos
 open System
 open Domain
 
+[<AbstractClass>]
 type CommandDto(aggregateId: Guid, timestamp: DateTime) = 
     member x.AggregateId = aggregateId
     member x.Timestamp = timestamp

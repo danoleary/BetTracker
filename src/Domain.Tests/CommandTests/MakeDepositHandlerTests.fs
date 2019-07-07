@@ -11,7 +11,7 @@ open TestHelpers
 let ``No event is raised if make deposit is handled before add bookie`` () =
     let state: State = EmptyState
     let args: CmdArgs.MakeDeposit =
-        { Transaction = TransactionAmount 100.0m }
+        { Amount = TransactionAmount 100.0m }
     let command = MakeDeposit args
 
     let result = execute state command
@@ -25,11 +25,11 @@ let ``Deposit made is raised if deposit is made after bookie created`` () =
     let id = createNewBookieId ()
     let state = bookieCreatedState id
     let makeDeposit: CmdArgs.MakeDeposit =
-        { Transaction = TransactionAmount 100.0m } 
+        { Amount = TransactionAmount 100.0m } 
     let command = MakeDeposit makeDeposit
 
     let result = execute state command
 
     match result with
-    | Ok (DepositMade args) -> Assert.True(args.Transaction = makeDeposit.Transaction)
+    | Ok (DepositMade args) -> Assert.True(args.Amount = makeDeposit.Amount)
     | _ -> failwith "incorrect event"
