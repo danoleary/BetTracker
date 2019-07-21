@@ -1,4 +1,4 @@
-module Dtos
+module CommandDtos
 
 open System
 open Domain
@@ -20,23 +20,26 @@ type MakeWithdrawalDto(aggregateId, timestamp, amount: decimal) =
     inherit CommandDto(aggregateId, timestamp)
     member x.Amount = amount
 
-type PlaceBackBetDto(aggregateId, timestamp, betId: Guid, stake: decimal, odds: decimal) =
+type PlaceBackBetDto(aggregateId, timestamp, betId: Guid, stake: decimal, odds: decimal, eventDescription: string) =
     inherit CommandDto(aggregateId, timestamp)
     member x.BetId = betId
     member x.Stake = stake
     member x.Odds = odds
+    member x.EventDescription = eventDescription
 
-type PlaceFreeBetDto(aggregateId, timestamp, betId: Guid, stake: decimal, odds: decimal) =
+type PlaceFreeBetDto(aggregateId, timestamp, betId: Guid, stake: decimal, odds: decimal, eventDescription: string) =
     inherit CommandDto(aggregateId, timestamp)
     member x.BetId = betId
     member x.Stake = stake
     member x.Odds = odds
+    member x.EventDescription = eventDescription
 
-type PlaceLayBetDto(aggregateId, timestamp, betId: Guid, stake: decimal, odds: decimal) =
+type PlaceLayBetDto(aggregateId, timestamp, betId: Guid, stake: decimal, odds: decimal, eventDescription: string) =
     inherit CommandDto(aggregateId, timestamp)
     member x.BetId = betId
     member x.Stake = stake
     member x.Odds = odds
+    member x.EventDescription = eventDescription
 
 type SettleBackBetDto(aggregateId, timestamp, betId: Guid, result: BetResult) =
     inherit CommandDto(aggregateId, timestamp)

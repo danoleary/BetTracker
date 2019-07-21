@@ -12,7 +12,7 @@ let ``Balance doesnt change after free bet placed event is applied`` () =
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 101m)
     let args: CmdArgs.PlaceFreeBet =
-        { Stake = Stake 100.99m; Odds = Odds 2.0m; BetId = createNewBetId ()  } 
+        { Stake = Stake 100.99m; Odds = Odds 2.0m; EventDescription = EventDescription "some event"; BetId = createNewBetId ()  } 
     let event = FreeBetPlaced args
 
     let result = apply state event
@@ -27,7 +27,7 @@ let ``Bet is added to bets`` () =
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 101m)
     let args: CmdArgs.PlaceFreeBet =
-        { Stake = Stake 100.99m; Odds = Odds 2.0m; BetId = createNewBetId ()  } 
+        { Stake = Stake 100.99m; Odds = Odds 2.0m; EventDescription = EventDescription "some event"; BetId = createNewBetId ()  } 
     let event = FreeBetPlaced args
 
     let result = apply state event

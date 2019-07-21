@@ -5,41 +5,76 @@ open System.Collections.Concurrent
 open Domain
 open Aggregate
 open CosmoStore
-open Dtos
+open CommandDtos
+open EventDtos
 
 module Mapping = 
-    open Newtonsoft.Json.Linq
 
     let toStoredEvent evn = 
         match evn with
-        | BookieAdded args -> "BookieAdded", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | DepositMade args -> "DepositMade", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | WithdrawalMade args -> "WithdrawalMade", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | BackBetPlaced args -> "BackBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | BackBetSettled args -> "BackBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | FreeBetPlaced args -> "FreeBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | FreeBetSettled args -> "FreeBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | LayBetPlaced args -> "LayBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | LayBetSettled args -> "LayBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | BackBetCashedOut args -> "BackBetCashedOut", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
-        | BonusCredited args -> "BonusCredited", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.BookieAdded args -> "BookieAdded", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.DepositMade args -> "DepositMade", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.WithdrawalMade args -> "WithdrawalMade", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.BackBetPlaced args -> "BackBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.BackBetSettled args -> "BackBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.FreeBetPlaced args -> "FreeBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.FreeBetSettled args -> "FreeBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.LayBetPlaced args -> "LayBetPlaced", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.LayBetSettled args -> "LayBetSettled", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.BackBetCashedOut args -> "BackBetCashedOut", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
+        | Domain.BonusCredited args -> "BonusCredited", args |> CosmoStore.CosmosDb.Serialization.objectToJToken
     
     let toDomainEvent data =
         match data with
-        | "BookieAdded", args -> args |> CosmosDb.Serialization.objectFromJToken |> BookieAdded
-        | "DepositMade", args -> args |> CosmosDb.Serialization.objectFromJToken |> DepositMade
-        | "WithdrawalMade", args -> args |> CosmosDb.Serialization.objectFromJToken |> WithdrawalMade
-        | "BackBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> BackBetPlaced
-        | "BackBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> BackBetSettled
-        | "FreeBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> FreeBetPlaced
-        | "FreeBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> FreeBetSettled
-        | "LayBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetPlaced
-        | "LayBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> LayBetSettled
-        | "BackBetCashedOut", args -> args |> CosmosDb.Serialization.objectFromJToken |> BackBetCashedOut
-        | "BonusCredited", args -> args |> CosmosDb.Serialization.objectFromJToken |> BonusCredited
+        | "BookieAdded", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.BookieAdded
+        | "DepositMade", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.DepositMade
+        | "WithdrawalMade", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.WithdrawalMade
+        | "BackBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.BackBetPlaced
+        | "BackBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.BackBetSettled
+        | "FreeBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.FreeBetPlaced
+        | "FreeBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.FreeBetSettled
+        | "LayBetPlaced", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.LayBetPlaced
+        | "LayBetSettled", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.LayBetSettled
+        | "BackBetCashedOut", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.BackBetCashedOut
+        | "BonusCredited", args -> args |> CosmosDb.Serialization.objectFromJToken |> Domain.BonusCredited
         | _ -> failwith "can't handle"
+    
+    let uwAmount (TransactionAmount amount) = amount
+    let uwBetId (BetId betId) = betId
+    let uwStake (Stake stake) = stake
+    let uwOdds (Odds odds) = odds
+    let uwDesc (EventDescription desc) = desc
+    let uwCashout (CashOutAmount amt) = amt
+
+    let toEventDto event: EventDto =
+        match event with
+        | Domain.BookieAdded args -> BookieAddedDto(DateTime.Now, args.Name) :> EventDto
+        | Domain.DepositMade args -> DepositMadeDto(DateTime.Now, uwAmount args.Amount) :> EventDto
+        | Domain.WithdrawalMade args -> WithdrawalMadeDto(DateTime.Now, uwAmount args.Amount) :> EventDto
+        | Domain.BackBetPlaced args ->
+            BackBetPlacedDto(DateTime.Now, uwBetId args.BetId, uwStake args.Stake,
+                             uwOdds args.Odds, uwDesc args.EventDescription) :> EventDto
+        | Domain.BackBetSettled args ->
+            BackBetSettledDto(DateTime.Now, uwBetId args.BetId,
+                             args.Result) :> EventDto
+        | Domain.FreeBetPlaced args ->
+            FreeBetPlacedDto(DateTime.Now, uwBetId args.BetId, uwStake args.Stake,
+                             uwOdds args.Odds, uwDesc args.EventDescription) :> EventDto
+        | Domain.FreeBetSettled args ->
+            FreeBetSettledDto(DateTime.Now, uwBetId args.BetId,
+                             args.Result) :> EventDto
+        | Domain.LayBetPlaced args ->
+            LayBetPlacedDto(DateTime.Now, uwBetId args.BetId, uwStake args.Stake,
+                             uwOdds args.Odds, uwDesc args.EventDescription) :> EventDto
+        | Domain.LayBetSettled args ->
+            LayBetSettledDto(DateTime.Now, uwBetId args.BetId,
+                             args.Result) :> EventDto
+        | Domain.BackBetCashedOut args ->
+            BackBetCashedOutDto(DateTime.Now, uwBetId args.BetId, uwCashout args.CashOutAmount) :> EventDto
+        | Domain.BonusCredited args -> BonusCreditedDto(DateTime.Now, uwAmount args.Amount) :> EventDto
 
 type EventStore = {
+    GetEvents : AggregateId -> EventDto list
     GetCurrentState : AggregateId -> State
     Append : String -> Event list -> unit
 }
@@ -58,6 +93,13 @@ let createDemoStore typ =
         match typ with
         | InMemory -> CosmoStore.InMemory.EventStore.getEventStore inMemoryConfig
     
+    let getEvents (AggregateId aggregateId) =
+        store.GetEvents (aggregateId.ToString ()) EventsReadRange.AllEvents
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+        |> List.map (fun x -> Mapping.toDomainEvent (x.Name, x.Data))
+        |> List.map (fun x -> Mapping.toEventDto x)
+
     let getCurrentState (AggregateId aggregateId) =
         store.GetEvents (aggregateId.ToString ()) EventsReadRange.AllEvents
         |> Async.AwaitTask
@@ -75,6 +117,7 @@ let createDemoStore typ =
         |> ignore 
 
     {
+        GetEvents = getEvents
         GetCurrentState = getCurrentState
         Append = append
     }
@@ -84,7 +127,7 @@ let validate (cmd: CommandDto): Command =
     | :? AddBookieDto as dto -> { 
         AggregateId = AggregateId dto.AggregateId;
         Timestamp = dto.Timestamp;
-        Payload = Domain.AddBookie {
+        Payload = AddBookie {
             Name = dto.Name
             BookieId = BookieId cmd.AggregateId
         }
@@ -92,42 +135,45 @@ let validate (cmd: CommandDto): Command =
     | :? MakeDepositDto as dto -> { 
         AggregateId = AggregateId dto.AggregateId;
         Timestamp = dto.Timestamp;
-        Payload = Domain.MakeDeposit {
+        Payload = MakeDeposit {
             Amount = TransactionAmount dto.Amount
         }
      }
     | :? MakeWithdrawalDto as dto -> { 
         AggregateId = AggregateId dto.AggregateId;
         Timestamp = dto.Timestamp;
-        Payload = Domain.MakeWithdrawal {
+        Payload = MakeWithdrawal {
             Amount = TransactionAmount dto.Amount
         }
      }
     | :? PlaceBackBetDto as dto -> { 
         AggregateId = AggregateId dto.AggregateId;
         Timestamp = dto.Timestamp;
-        Payload = Domain.PlaceBackBet {
+        Payload = PlaceBackBet {
             BetId = BetId dto.BetId
             Stake = Stake dto.Stake
             Odds = Odds dto.Odds
+            EventDescription = EventDescription dto.EventDescription
         }
      }
     | :? PlaceFreeBetDto as dto -> { 
         AggregateId = AggregateId dto.AggregateId;
         Timestamp = dto.Timestamp;
-        Payload = Domain.PlaceFreeBet {
+        Payload = PlaceFreeBet {
             BetId = BetId dto.BetId
             Stake = Stake dto.Stake
             Odds = Odds dto.Odds
+            EventDescription = EventDescription dto.EventDescription
         }
      }
     | :? PlaceLayBetDto as dto -> { 
         AggregateId = AggregateId dto.AggregateId;
         Timestamp = dto.Timestamp;
-        Payload = Domain.PlaceFreeBet {
+        Payload = PlaceFreeBet {
             BetId = BetId dto.BetId
             Stake = Stake dto.Stake
             Odds = Odds dto.Odds
+            EventDescription = EventDescription dto.EventDescription
         }
      }
     | :? SettleBackBetDto as dto -> { 
@@ -196,3 +242,6 @@ let handle (store: EventStore) (cmd: CommandDto) =
 
 let getCurrentState (eventStore: EventStore) (aggId: Guid) =
     eventStore.GetCurrentState (AggregateId aggId)
+
+let getEvents (eventStore: EventStore) (aggId: Guid)  =
+    eventStore.GetEvents (AggregateId aggId)

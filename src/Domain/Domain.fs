@@ -14,6 +14,8 @@ type BetResult = Win | Lose
 
 type BetId = BetId of Guid
 
+type EventDescription = EventDescription of string
+
 type BetState = Settled | NotSettled | CashedOut
 
 type BookieId = BookieId of Guid
@@ -54,12 +56,14 @@ module CmdArgs =
         Stake : Stake
         Odds : Odds
         BetId : BetId
+        EventDescription: EventDescription
     }
 
     type PlaceFreeBet = {
         Stake : Stake
         Odds : Odds
         BetId : BetId
+        EventDescription: EventDescription
     }
 
     type SettleBackBet = {
@@ -76,6 +80,7 @@ module CmdArgs =
         Stake : Stake
         Odds : Odds
         BetId : BetId
+        EventDescription: EventDescription
     }
 
     type SettleLayBet = {

@@ -1,7 +1,6 @@
 ﻿open System
 open Domain
 open FSharp.Data
-open Dtos
 open System.Net.Http
 open Newtonsoft.Json
 open System.Text
@@ -90,90 +89,95 @@ let main argv =
         Bookies
             .Load("https://docs.google.com/spreadsheets/d/13AXqyemjgob_DoqN84jUxnrJDHqcBtuGvHAchjR5BMI/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> AddBookieDto(x.Id, DateTime.Today.AddYears(-10), x.Name) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.AddBookieDto(x.Id, DateTime.Today.AddYears(-10), x.Name) :> CommandDtos.CommandDto)
                             
     let depositCommands =
         Deposits
             .Load("https://docs.google.com/spreadsheets/d/1vK_8HtQHRDSpoMQmapPQY6kg3JHVfFDCoNLFNg6Ck8s/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> MakeDepositDto(x.Id, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.MakeDepositDto(x.Id, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDtos.CommandDto)
 
     let withdrawalCommands =
         Withdrawals
             .Load("https://docs.google.com/spreadsheets/d/1ofH2vj_uaiwcDG_26DFyln5RwkXwTgjSJJVsLUfrbNg/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> MakeWithdrawalDto(x.Id, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.MakeWithdrawalDto(x.Id, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDtos.CommandDto)
 
     let placeBackBetCommands =
         PlaceBackBets
             .Load("https://docs.google.com/spreadsheets/d/1xhHtOQNb1mm-r-UWFHxdiK4tewjXPrLKPz6P1dvXcfE/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> PlaceBackBetDto(x.BookieId, DateTime.Parse(x.``Date placed``), x.BetId, x.Stake, x.Odds) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.PlaceBackBetDto(
+                                x.BookieId, DateTime.Parse(x.``Date placed``)
+                                , x.BetId, x.Stake, x.Odds, x.Event) :> CommandDtos.CommandDto)
 
     let settleBackBetCommands =
         SettleBackBets
             .Load("https://docs.google.com/spreadsheets/d/1TlZ6aPSJRyW_5-YSbNp9KQ_kEarFUrue9t9HtPbFdDY/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> SettleBackBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.SettleBackBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDtos.CommandDto)
 
     let placeFreeBetCommands =
         PlaceFreeBets
             .Load("https://docs.google.com/spreadsheets/d/1StGsS86PuitnzfgCxipWUIIOJU2kr5Aq6uwL6eJXOPk/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> PlaceFreeBetDto(x.BookieId, DateTime.Parse(x.``Date placed``), x.BetId, x.Stake, x.Odds) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.PlaceFreeBetDto(
+                                x.BookieId, DateTime.Parse(x.``Date placed``),
+                                x.BetId, x.Stake, x.Odds, x.Event) :> CommandDtos.CommandDto)
 
     let settleFreeBetCommands =
         SettleBackBets
             .Load("https://docs.google.com/spreadsheets/d/1aM7Kz2EFm0Iy3f_k-tP79xW-AyC136kHDT3qir54XCo/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> SettleFreeBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.SettleFreeBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDtos.CommandDto)
 
     let cashoutbackbetCommands =
         CashOutBackBets
             .Load("https://docs.google.com/spreadsheets/d/1yJGP-7Rx2yrV1FGz7zzWOZK6AScCOqUtyVHELKpQ0mE/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> CashOutBackBetDto(x.BookieId, DateTime(2019, 06, 03, 20, 43, 0), x.BetId, x.CashOutAmount) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.CashOutBackBetDto(x.BookieId, DateTime(2019, 06, 03, 20, 43, 0), x.BetId, x.CashOutAmount) :> CommandDtos.CommandDto)
                                            
     let placelaybetCommands =
         PlaceLayBets
             .Load("https://docs.google.com/spreadsheets/d/1pyMZ4cdRcUF99v-tGAk8Y-JaP06BPv6V5cTyAhCWVqE/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> PlaceLayBetDto(x.BookieId, DateTime.Parse(x.``Date placed``), x.BetId, x.Stake, x.Odds) :> CommandDto) 
+        |> Seq.map (fun x -> CommandDtos.PlaceLayBetDto(x.BookieId, DateTime.Parse(x.``Date placed``),
+                                x.BetId, x.Stake, x.Odds, x.Event) :> CommandDtos.CommandDto) 
 
     let settlelaybetCommands =
         SettleLayBets
             .Load("https://docs.google.com/spreadsheets/d/1gM_CAmsAUBjmI4bvG6nc9kEhig-O44xzXPlXxY7Ke5M/export?exportFormat=csv")
             .Rows
-        |> Seq.map (fun x -> SettleLayBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDto)
+        |> Seq.map (fun x -> CommandDtos.SettleLayBetDto(x.BookieId, DateTime.Parse(x.``Date settled``), x.BetId, (toResult x.Win)) :> CommandDtos.CommandDto)
 
     let creditBonusCommands =
         CreditBonuses
             .Load("/Users/danieloleary/Documents/Github/BetTracker/src/ConsoleApp/data/creditbonuses.csv")
             .Rows
-        |> Seq.map (fun x -> CreditBonusDto(x.BookieId, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDto)                    
+        |> Seq.map (fun x -> CommandDtos.CreditBonusDto(x.BookieId, DateTime.Parse(x.Timestamp), x.Amount) :> CommandDtos.CommandDto)                    
 
-    let allCommands: seq<CommandDto> =
+    let allCommands: seq<CommandDtos.CommandDto> =
         Seq.concat [addBookieCommands; depositCommands; placeBackBetCommands; settleBackBetCommands;
                     withdrawalCommands; placeFreeBetCommands; settleFreeBetCommands; cashoutbackbetCommands;
                     creditBonusCommands; placelaybetCommands; settlelaybetCommands ]                
         |> Seq.filter (fun x -> (List.contains x.AggregateId includedBookies))
         |> Seq.sortBy (fun x -> x.Timestamp)       
 
-    let postCommand (payload: CommandDto) = async { 
+    let postCommand (payload: CommandDtos.CommandDto) = async { 
             let client = new  HttpClient()
             let json = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json")
             let endpoint = match payload with
-                            | :? AddBookieDto -> "addbookie"
-                            | :? MakeDepositDto -> "makedeposit"
-                            | :? MakeWithdrawalDto -> "makewithdrawal"
-                            | :? PlaceBackBetDto -> "placebackbet"
-                            | :? SettleBackBetDto -> "settlebackbet"
-                            | :? PlaceFreeBetDto -> "placefreebet"
-                            | :? SettleFreeBetDto -> "settlefreebet"
-                            | :? PlaceLayBetDto -> "placelaybet"
-                            | :? SettleLayBetDto -> "settlelaybet"
-                            | :? CashOutBackBetDto -> "cashoutbackbet"
-                            | :? CreditBonusDto -> "creditbonus"
+                            | :? CommandDtos.AddBookieDto -> "addbookie"
+                            | :? CommandDtos.MakeDepositDto -> "makedeposit"
+                            | :? CommandDtos.MakeWithdrawalDto -> "makewithdrawal"
+                            | :? CommandDtos.PlaceBackBetDto -> "placebackbet"
+                            | :? CommandDtos.SettleBackBetDto -> "settlebackbet"
+                            | :? CommandDtos.PlaceFreeBetDto -> "placefreebet"
+                            | :? CommandDtos.SettleFreeBetDto -> "settlefreebet"
+                            | :? CommandDtos.PlaceLayBetDto -> "placelaybet"
+                            | :? CommandDtos.SettleLayBetDto -> "settlelaybet"
+                            | :? CommandDtos.CashOutBackBetDto -> "cashoutbackbet"
+                            | :? CommandDtos.CreditBonusDto -> "creditbonus"
             let! response = client.PostAsync(
                                 sprintf "http://localhost:5000/api/commands/%s" endpoint,
                                 json)                         

@@ -12,7 +12,7 @@ let ``Balance is decreased by exposure amount`` () =
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 100.01m)
     let args: CmdArgs.PlaceLayBet =
-        { Stake = Stake 100m; Odds = Odds 2.0m; BetId = (createNewBetId ())  } 
+        { Stake = Stake 100m; Odds = Odds 2.0m; EventDescription = EventDescription "some event"; BetId = (createNewBetId ())  } 
     let event = LayBetPlaced args
 
     let result = apply state event
@@ -27,7 +27,7 @@ let ``Bet is added to bets`` () =
     let id = createNewBookieId ()
     let state = depositMadeState id (TransactionAmount 101m)
     let args: CmdArgs.PlaceLayBet =
-        { Stake = Stake 100.99m; Odds = Odds 2.0m; BetId = (BetId (Guid.NewGuid ()))  } 
+        { Stake = Stake 100.99m; Odds = Odds 2.0m; EventDescription = EventDescription "some event"; BetId = (BetId (Guid.NewGuid ()))  } 
     let event = LayBetPlaced args
 
     let result = apply state event
