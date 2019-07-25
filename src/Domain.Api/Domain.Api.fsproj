@@ -9,12 +9,15 @@
     <Compile Include="Controllers/CommandsController.fs" />
     <Compile Include="Controllers/EventsController.fs" />
     <Compile Include="Controllers/StateController.fs" />
+    <Compile Include="Auth/HasScopeRequirement.fs" />
+    <Compile Include="Auth/HasScopeHandler.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>

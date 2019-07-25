@@ -1,8 +1,10 @@
 ﻿namespace Domain.Api.Controllers
 
 open Microsoft.AspNetCore.Mvc
+open Microsoft.AspNetCore.Authorization
 
 [<Route("api/[controller]")>]
+[<Authorize("write:command")>]
 [<ApiController>]
 type CommandsController (eventStore: CommandHandler.EventStore) =
     inherit ControllerBase()

@@ -86,12 +86,14 @@ let inMemoryConfig: CosmoStore.InMemory.Configuration = {
 
 type StorageType =
     | InMemory
+    | Postgres of CosmoStore.Marten.Configuration
 
 let createDemoStore typ =
 
     let store = 
         match typ with
         | InMemory -> CosmoStore.InMemory.EventStore.getEventStore inMemoryConfig
+        | Postgres cfg -> CosmoStore.Marten.EventStore.getEventStore cfg
     
     let getEvents (AggregateId aggregateId) =
         store.GetEvents (aggregateId.ToString ()) EventsReadRange.AllEvents

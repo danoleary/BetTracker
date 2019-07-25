@@ -15,12 +15,12 @@ let depositMadeState id amount =
 
 let backBetPlacedState bookieId betId deposit stake odds =
     let state = depositMadeState bookieId deposit
-    let event = BackBetPlaced { Odds = odds; Stake = stake; BetId = betId }
+    let event = BackBetPlaced { Odds = odds; Stake = stake; BetId = betId; EventDescription = EventDescription "" }
     apply state event
 
 let layBetPlacedState bookieId betId deposit stake odds =
     let state = depositMadeState bookieId deposit
-    let event = LayBetPlaced { Odds = odds; Stake = stake; BetId = betId }
+    let event = LayBetPlaced { Odds = odds; Stake = stake; BetId = betId; EventDescription = EventDescription "" }
     apply state event
 
 let createNewBookieId () = BookieId (Guid.NewGuid ())
