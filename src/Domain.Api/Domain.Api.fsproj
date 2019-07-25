@@ -9,6 +9,7 @@
     <Compile Include="Controllers/CommandsController.fs" />
     <Compile Include="Controllers/EventsController.fs" />
     <Compile Include="Controllers/StateController.fs" />
+    <Compile Include="Controllers/HealthController.fs" />
     <Compile Include="Auth/HasScopeRequirement.fs" />
     <Compile Include="Auth/HasScopeHandler.fs" />
     <Compile Include="Startup.fs" />
