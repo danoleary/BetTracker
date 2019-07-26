@@ -14,6 +14,7 @@ module Program =
     let exitCode = 0
 
     let port = Environment.GetEnvironmentVariable("PORT")
+    printfn "PORT: %s" port
 
     let CreateWebHostBuilder args =
         WebHost
