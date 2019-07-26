@@ -13,9 +13,6 @@ open Microsoft.Extensions.Logging
 module Program =
     let exitCode = 0
 
-    let port = Environment.GetEnvironmentVariable("PORT")
-    printfn "PORT: %s" port
-
     let CreateWebHostBuilder args =
         WebHost
             .CreateDefaultBuilder(args)
@@ -23,7 +20,6 @@ module Program =
                 fun builder -> builder.AddEnvironmentVariables() |> ignore
             )
             .UseStartup<Startup>()
-            .UseUrls(sprintf "http://*:%A" port);
 
     [<EntryPoint>]
     let main args =
