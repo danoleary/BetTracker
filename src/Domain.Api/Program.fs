@@ -23,7 +23,7 @@ module Program =
                 fun builder -> builder.AddEnvironmentVariables() |> ignore
             )
             .UseStartup<Startup>()
-            .UseUrls(sprintf "https://*:%A" port);
+            .UseUrls(sprintf "http://*:%A" port);
 
     [<EntryPoint>]
     let main args =
