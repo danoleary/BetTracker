@@ -1,6 +1,5 @@
 namespace Domain.Api.Auth
 
-open System
 open Microsoft.AspNetCore.Authorization
 
 type HasScopeRequirement (scopeParam: string, issuerParam: string) =

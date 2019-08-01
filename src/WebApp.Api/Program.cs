@@ -19,6 +19,9 @@ namespace WebApp.Api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(
+                    builder => builder.AddEnvironmentVariables()
+                )
                 .UseStartup<Startup>();
     }
 }
