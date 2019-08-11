@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace WebApp.Api.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize("read:values")]
+    [Authorize("read:bets")]
     [ApiController]
     public class ValuesController : ControllerBase
     {

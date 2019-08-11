@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Api
 {
@@ -23,6 +24,8 @@ namespace WebApp.Api
         }
 
         public IConfiguration Configuration { get; }
+
+        private static string corsConfigName = "myorigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,13 +44,28 @@ namespace WebApp.Api
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("read:values", policy => policy.Requirements.Add(new HasScopeRequirement("read:values", domain)));
+                options.AddPolicy("read:bets", policy => policy.Requirements.Add(new HasPermissionRequirement("read:bets", domain)));
+                options.AddPolicy("write:bets", policy => policy.Requirements.Add(new HasPermissionRequirement("write:bets", domain)));
             });
 
-    // register the scope authorization handler
-    services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(corsConfigName,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:8000")
+                    .AllowAnyHeader()
+                                .AllowAnyMethod();
+                });
+            });
+
+            // register the scope authorization handler
+            services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddDbContext<BetTrackerContext>
+                (options => options.UseNpgsql(Configuration.GetConnectionString("Database")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +80,8 @@ namespace WebApp.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors(corsConfigName); 
 
             app.UseHttpsRedirection();
 

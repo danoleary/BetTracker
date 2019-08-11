@@ -13,7 +13,7 @@ export default class Auth {
     redirectUri: AUTH0_CALLBACK_URL,
     audience: AUTH0_AUDIENCE,
     responseType: 'token id_token',
-    scope: 'openid profile email',
+    scope: 'openid',
   })
  
   login = () => {
@@ -25,7 +25,13 @@ export default class Auth {
     localStorage.removeItem('id_token')
     localStorage.removeItem('expires_at')
     localStorage.removeItem('user')
+    localStorage.removeItem('permissions')
     callback()
+  }
+
+  hasPermission(permissions) {
+    const grantedPermissions = JSON.parse(localStorage.getItem('permissions'));
+    return permissions.every(permission => grantedPermissions.includes(permission));
   }
  
   handleAuthentication = () => {
@@ -56,6 +62,7 @@ export default class Auth {
     localStorage.setItem('access_token', authResult.accessToken)
     localStorage.setItem('id_token', authResult.idToken)
     localStorage.setItem('expires_at', expiresAt)
+    localStorage.setItem('scopes', JSON.stringify(authResult.scope || ""));
  
     this.auth0.client.userInfo(authResult.accessToken, (err, user) => {
       localStorage.setItem('user', JSON.stringify(user))
@@ -72,5 +79,13 @@ export default class Auth {
     if (this.getUser()) {
       return this.getUser().name
     }
+  }
+
+  getAccessToken() {
+    const accessToken = localStorage.getItem('access_token');
+    if (!accessToken) {
+      throw new Error('No access token found');
+    }
+    return accessToken;
   }
 }

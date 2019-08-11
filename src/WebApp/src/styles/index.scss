@@ -16,17 +16,19 @@ $navbar-padding-vertical: 100rem;
 $navbar-dropdown-background-color: #f7f6f5;
 $button-border-width: 2px;
 $button-border-color: black;
-$navbar-height: 7rem;
+$navbar-height: 4rem;
 $navbar-dropdown-offset: 0;
 $gap: 24px;
 $size-7: 0.7rem;
+
 // Update blue
 // $blue: #72d0eb;
 // Add pink and its invert
 // $pink: #ffb3b3;
 // $pink-invert: #fff;
 // Add a serif family
-$family-sans-serif: Montserrat, Arial, Helvetica, sans-serif;
+$family-sans-serif: Helvetica, sans-serif;
+$family-primary: $family-sans-serif;
 
 // 3. Set the derived variables
 // Use the new pink as the primary color

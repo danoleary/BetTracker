@@ -1,5 +1,3 @@
-docker build -t domain-api -f Domain.Api.Dockerfile .
-docker run -d -p 8080:80 -p 8443:443 --name domain-api domain-api
+#!/bin/bash
 
-// set up certs
-dotnet dev-certs https --trust
+docker run -e POSTGRES_USER=bettrackerwebapp -e POSTGRES_PASSWORD=password -p 5432:5432 --name bettrackerwebappdb -d postgres
