@@ -1,28 +1,41 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
-
   <ItemGroup>
+    <Compile Include="Migrations/201909291530.User.fs" />
+    <Compile Include="Data/User.fs" />
+    <Compile Include="Data/UserRepository.fs" />
+    <Compile Include="DataImport\SpreadsheetUrls.fs" />
+    <Compile Include="DataImport\DataImport.fs" />
+    <Compile Include="Controllers/DataImportController.fs" />
+    <Compile Include="Controllers/UserController.fs" />
     <Compile Include="Controllers/CommandsController.fs" />
     <Compile Include="Controllers/EventsController.fs" />
     <Compile Include="Controllers/StateController.fs" />
     <Compile Include="Controllers/HealthController.fs" />
-    <Compile Include="Auth/HasScopeRequirement.fs" />
-    <Compile Include="Auth/HasScopeHandler.fs" />
+    <Compile Include="Auth/HasPermissionRequirement.fs" />
+    <Compile Include="Auth/HasPermissionHandler.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
+   
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="FSharp.Data" Version="3.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.App">
+      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
+      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+    <PackageReference Include="Npgsql" Version="4.1.0" />
+    <PackageReference Include="Simple.Migrations" Version="0.9.20" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.fsproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Folder Include="DataImport\" />
+  </ItemGroup>
 </Project>

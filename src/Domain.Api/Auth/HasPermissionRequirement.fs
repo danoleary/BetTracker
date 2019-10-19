@@ -2,14 +2,14 @@ namespace Domain.Api.Auth
 
 open Microsoft.AspNetCore.Authorization
 
-type HasScopeRequirement (scopeParam: string, issuerParam: string) =
+type HasPermissionRequirement (permissionParam: string, issuerParam: string) =
 
-    let mutable scope = scopeParam
+    let mutable permission = permissionParam
     let mutable issuer = issuerParam
 
-    member this.Scope
-      with get() = scope
-      and set(value) = scope <- value
+    member this.Permission
+      with get() = permission
+      and set(value) = permission <- value
 
     member this.Issuer
       with get() = issuer
@@ -17,5 +17,3 @@ type HasScopeRequirement (scopeParam: string, issuerParam: string) =
     
     interface IAuthorizationRequirement
 
-
-    

@@ -30,7 +30,7 @@ const Header = ({ siteTitle }) => {
 return (
   <nav className="navbar is-dark" role="navigation" aria-label="main navigation">
     <div className="navbar-brand">
-      <a className="navbar-item" href="https://bulma.io">
+      <a className="navbar-item" href="/">
         Bet Tracker
       </a>
 

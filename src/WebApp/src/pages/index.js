@@ -5,6 +5,7 @@ import Layout from "../components/layout"
 import Image from "../components/image"
 import SEO from "../components/seo"
 import Auth from '../services/auth'
+import Home from './home'
 
 const auth = new Auth()
 
@@ -15,7 +16,7 @@ const IndexPage = () => {
     <SEO title="Home" />
     <h1 className="title is-1">Welcome to Bet Tracker</h1>
     {isAuthenticated() ? (
-        <p>Go to my bets</p>
+        <Home />
       ) : (
         <button className="button is-primary" onClick={auth.login}>
           <strong>Sign up here</strong>

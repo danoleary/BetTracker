@@ -56,16 +56,22 @@ export default class Auth {
   }
  
   setSession = authResult => {
+    
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
     )
+    console.log(JSON.stringify(authResult))
     localStorage.setItem('access_token', authResult.accessToken)
     localStorage.setItem('id_token', authResult.idToken)
     localStorage.setItem('expires_at', expiresAt)
     localStorage.setItem('scopes', JSON.stringify(authResult.scope || ""));
- 
+
     this.auth0.client.userInfo(authResult.accessToken, (err, user) => {
       localStorage.setItem('user', JSON.stringify(user))
+      this.getuserDataFromServer(authResult.accessToken)
+        .then(result => {
+          console.log(result)
+        })
     })
   }
  
@@ -87,5 +93,20 @@ export default class Auth {
       throw new Error('No access token found');
     }
     return accessToken;
+  }
+
+  getuserDataFromServer(token) {
+      console.log('in getuserDataFromServer')
+      const url = 'https://localhost:5001/api/user/'
+      var response = fetch(url, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'bearer ' + token,
+          }
+      })
+      .then(response => response.json());
+      console.log(response)
+      return response;
   }
 }

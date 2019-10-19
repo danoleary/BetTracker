@@ -5,7 +5,7 @@ open Microsoft.AspNetCore.Authorization
 open System
 
 [<Route("api/[controller]")>]
-[<Authorize("read:state")>]
+[<Authorize>]
 [<ApiController>]
 type StateController (eventStore: CommandHandler.EventStore) =
     inherit ControllerBase()

@@ -1,28 +1,30 @@
 namespace Domain.Api
 
-open System
-open System.Collections.Generic
-open System.Linq
-open System.Threading.Tasks
-open System.Collections.Concurrent
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
-open Microsoft.AspNetCore.HttpsPolicy;
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.AspNetCore.Authentication.JwtBearer
 open Microsoft.AspNetCore.Authorization
 open Domain.Api.Auth
+open SimpleMigrations
+open SimpleMigrations.DatabaseProvider
+open System.Reflection
+open Npgsql
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
         Startup() then
         this.Configuration <- configuration
 
+    member this.CorsConfigName = "myorigins"
+
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
-        // Add framework services.
+        
+        let env = services.BuildServiceProvider().GetService<IHostingEnvironment>()
+
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
 
         let postgresConfig: CosmoStore.Marten.Configuration = {
@@ -61,17 +63,33 @@ type Startup private () =
             fun options ->
                 options.AddPolicy(
                     "write:command",
-                    fun policy -> policy.Requirements.Add(HasScopeRequirement("write:command", domain)))
+                    fun policy -> policy.Requirements.Add(HasPermissionRequirement("write:command", domain)))
                 options.AddPolicy(
                     "read:event",
-                    fun policy -> policy.Requirements.Add(HasScopeRequirement("read:event", domain)))
+                    fun policy -> policy.Requirements.Add(HasPermissionRequirement("read:event", domain)))
                 options.AddPolicy(
                     "read:state",
-                    fun policy -> policy.Requirements.Add(HasScopeRequirement("read:state", domain)))
+                    fun policy -> policy.Requirements.Add(HasPermissionRequirement("read:state", domain)))
+                options.AddPolicy(
+                    "read:bets",
+                    fun policy -> policy.Requirements.Add(HasPermissionRequirement("read:state", domain)))
+        ) |> ignore
+
+        services.AddCors(
+            fun options ->
+                options.AddPolicy(
+                    this.CorsConfigName,
+                    fun builder ->
+                        builder
+                            .WithOrigins("http://localhost:8000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod() |> ignore
+                    )
         ) |> ignore
 
         // register the scope authorization handler
-        services.AddSingleton<IAuthorizationHandler, HasScopeHandler> () |> ignore
+        services.AddSingleton<IAuthorizationHandler, HasPermissionHandler> () |> ignore
+       
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
@@ -82,8 +100,19 @@ type Startup private () =
             app.UseHsts() |> ignore
             app.UseHttpsRedirection() |> ignore
 
+        
+        app.UseCors(this.CorsConfigName) |> ignore
+
         app.UseAuthentication() |> ignore
 
         app.UseMvc() |> ignore
+
+        let assembly = Assembly.GetExecutingAssembly()
+        use db = new NpgsqlConnection (this.Configuration.GetConnectionString("Database"))
+        let provider = PostgresqlDatabaseProvider(db)
+        let migrator = SimpleMigrator(assembly, provider)
+        migrator.Load()
+        migrator.MigrateToLatest()
+    
 
     member val Configuration : IConfiguration = null with get, set
