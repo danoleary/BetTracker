@@ -1,6 +1,5 @@
 module BookieCreatedHandlerTests
 
-open System
 open Xunit
 open Domain
 open Aggregate

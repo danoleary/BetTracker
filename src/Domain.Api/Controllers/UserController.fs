@@ -18,7 +18,6 @@ type UserController (configuration: IConfiguration) =
     member this.Get() =
         let userIdClaim = (this.User.Claims
                      |> Seq.find (fun x -> x.Type = ClaimTypes.NameIdentifier))
-        printfn "Claims: %A" userIdClaim
         let userId = userIdClaim.Value.ToString()
         let connection = configuration.GetConnectionString("database")
         let existingUser = getUser userId connection

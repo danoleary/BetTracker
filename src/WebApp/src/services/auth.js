@@ -69,9 +69,6 @@ export default class Auth {
     this.auth0.client.userInfo(authResult.accessToken, (err, user) => {
       localStorage.setItem('user', JSON.stringify(user))
       this.getuserDataFromServer(authResult.accessToken)
-        .then(result => {
-          console.log(result)
-        })
     })
   }
  
@@ -98,15 +95,12 @@ export default class Auth {
   getuserDataFromServer(token) {
       console.log('in getuserDataFromServer')
       const url = 'https://localhost:5001/api/user/'
-      var response = fetch(url, {
+      fetch(url, {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'bearer ' + token,
           }
-      })
-      .then(response => response.json());
-      console.log(response)
-      return response;
+      });
   }
 }

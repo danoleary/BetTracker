@@ -1,6 +1,5 @@
 module DepositMadeHandlerTests
 
-open System
 open Xunit
 open Domain
 open Aggregate

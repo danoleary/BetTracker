@@ -6,7 +6,6 @@ open Domain
 open Aggregate
 open CosmoStore
 open CommandDtos
-open EventDtos
 
 module Mapping = 
 
@@ -45,36 +44,9 @@ module Mapping =
     let uwOdds (Odds odds) = odds
     let uwDesc (EventDescription desc) = desc
     let uwCashout (CashOutAmount amt) = amt
-
-    let toEventDto event: EventDto =
-        match event with
-        | Domain.BookieAdded args -> BookieAddedDto(DateTime.Now, args.Name) :> EventDto
-        | Domain.DepositMade args -> DepositMadeDto(DateTime.Now, uwAmount args.Amount) :> EventDto
-        | Domain.WithdrawalMade args -> WithdrawalMadeDto(DateTime.Now, uwAmount args.Amount) :> EventDto
-        | Domain.BackBetPlaced args ->
-            BackBetPlacedDto(DateTime.Now, uwBetId args.BetId, uwStake args.Stake,
-                             uwOdds args.Odds, uwDesc args.EventDescription) :> EventDto
-        | Domain.BackBetSettled args ->
-            BackBetSettledDto(DateTime.Now, uwBetId args.BetId,
-                             args.Result) :> EventDto
-        | Domain.FreeBetPlaced args ->
-            FreeBetPlacedDto(DateTime.Now, uwBetId args.BetId, uwStake args.Stake,
-                             uwOdds args.Odds, uwDesc args.EventDescription) :> EventDto
-        | Domain.FreeBetSettled args ->
-            FreeBetSettledDto(DateTime.Now, uwBetId args.BetId,
-                             args.Result) :> EventDto
-        | Domain.LayBetPlaced args ->
-            LayBetPlacedDto(DateTime.Now, uwBetId args.BetId, uwStake args.Stake,
-                             uwOdds args.Odds, uwDesc args.EventDescription) :> EventDto
-        | Domain.LayBetSettled args ->
-            LayBetSettledDto(DateTime.Now, uwBetId args.BetId,
-                             args.Result) :> EventDto
-        | Domain.BackBetCashedOut args ->
-            BackBetCashedOutDto(DateTime.Now, uwBetId args.BetId, uwCashout args.CashOutAmount) :> EventDto
-        | Domain.BonusCredited args -> BonusCreditedDto(DateTime.Now, uwAmount args.Amount) :> EventDto
-
+    
 type EventStore = {
-    GetEvents : AggregateId -> EventDto list
+    GetEvents : AggregateId -> Event list
     GetCurrentState : AggregateId -> State
     Append : String -> Event list -> unit
 }
@@ -100,7 +72,6 @@ let createDemoStore typ =
         |> Async.AwaitTask
         |> Async.RunSynchronously
         |> List.map (fun x -> Mapping.toDomainEvent (x.Name, x.Data))
-        |> List.map (fun x -> Mapping.toEventDto x)
 
     let getCurrentState (AggregateId aggregateId) =
         store.GetEvents (aggregateId.ToString ()) EventsReadRange.AllEvents

@@ -2,24 +2,32 @@ namespace Data
 
 open Npgsql
 open Dapper
+open System.Collections.Generic
 
 
 module UserRepository =
+
+    let p name value =
+            ( name, value )
+
     let getUser id connectionString =
         use connection = new NpgsqlConnection(connectionString)
-        let props : Dictionary<string, string> = dict ["id" => id]
-        let user = connection.QuerySingleOrDefault<User>("SELECT id From users WHERE id = @id", dict ["id" => id])
+        let p: IDictionary<string, obj> = Map.ofList [ ("id", id) ] |> Map.toSeq |> dict
+        let user = connection.QuerySingleOrDefault<User>("""SELECT id From users WHERE id = @id""", p)
         if isNull (box user) then None
         else Some user
 
     let getAggregatesForUser userId connectionString =
         use connection = new NpgsqlConnection(connectionString)
-        connection.Query<Aggregate>("SELECT id, user_id From aggregates WHERE user_id = @UserId", (Map ["UserId", userId]))
+        let p: IDictionary<string, obj> = Map.ofList [ ("user_id", userId) ] |> Map.toSeq |> dict
+        connection.Query<Aggregate>("SELECT id, user_id From aggregates WHERE user_id = @user_id", p)
 
-    let insertUser userId connectionString =
+    let insertUser id connectionString =
         use connection = new NpgsqlConnection(connectionString)
-        connection.Execute("INSERT INTO users (id) values (@UserId)", (Map ["UserId", userId]))
+        let p: IDictionary<string, obj> = Map.ofList [ ("id", id) ] |> Map.toSeq  |> dict
+        connection.Execute("""insert into users (id) values (@id)""", p)
 
-    let insertAggregate userId aggregateId connectionString =
+    let insertAggregate aggregateId userId connectionString =
         use connection = new NpgsqlConnection(connectionString)
-        connection.Execute("INSERT INTO aggregates (id, user_id) values (@UserId, @AggregateId)", (Map [("UserId", userId), ("AggregateId", aggregateId)]))
+        let p: IDictionary<string, obj> = Map.ofList [ ("id", aggregateId); ("user_id", userId) ] |> Map.toSeq |> dict
+        connection.Execute("INSERT INTO aggregates (id, user_id) values (@id, @user_id)", p)

@@ -82,6 +82,7 @@ type Startup private () =
                     fun builder ->
                         builder
                             .WithOrigins("http://localhost:8000")
+                            .WithOrigins("https://www.graphqlbin.com")
                             .AllowAnyHeader()
                             .AllowAnyMethod() |> ignore
                     )
