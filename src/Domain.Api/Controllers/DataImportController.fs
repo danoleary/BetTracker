@@ -23,7 +23,7 @@ type DataImportController (configuration: IConfiguration, eventStore: CommandHan
         let userId = userIdClaim.Value.ToString()
         let connection = configuration.GetConnectionString("database")
 
-        let aggregateIds = importCommands eventStore
+        let aggregateIds = importFayeCommands eventStore
 
         List.iter (fun x -> insertAggregate x userId connection |> ignore) (List.ofSeq aggregateIds)
         

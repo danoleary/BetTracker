@@ -135,6 +135,8 @@ type Bookie = {
     Name : string
     Balance : Balance
     Bets : Bet list
+    TotalDeposits : TransactionAmount
+    TotalWithdrawals : TransactionAmount
 }
 
 type State = EmptyState | Bookie of Bookie

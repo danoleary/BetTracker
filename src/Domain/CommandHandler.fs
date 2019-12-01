@@ -5,7 +5,6 @@ open System.Collections.Concurrent
 open Domain
 open Aggregate
 open CosmoStore
-open CommandDtos
 
 module Mapping = 
 
@@ -74,9 +73,11 @@ let createDemoStore typ =
         |> List.map (fun x -> Mapping.toDomainEvent (x.Name, x.Data))
 
     let getCurrentState (AggregateId aggregateId) =
-        store.GetEvents (aggregateId.ToString ()) EventsReadRange.AllEvents
-        |> Async.AwaitTask
-        |> Async.RunSynchronously
+        let events = 
+            store.GetEvents (aggregateId.ToString ()) EventsReadRange.AllEvents
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+        events
         |> List.map (fun x -> Mapping.toDomainEvent (x.Name, x.Data))
         |> List.fold aggregate.Apply State.Init
 
@@ -94,101 +95,6 @@ let createDemoStore typ =
         GetCurrentState = getCurrentState
         Append = append
     }
-
-let validate (cmd: CommandDto): Command =
-    match cmd with
-    | :? AddBookieDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = AddBookie {
-            Name = dto.Name
-            BookieId = BookieId cmd.AggregateId
-        }
-     }
-    | :? MakeDepositDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = MakeDeposit {
-            Amount = TransactionAmount dto.Amount
-        }
-     }
-    | :? MakeWithdrawalDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = MakeWithdrawal {
-            Amount = TransactionAmount dto.Amount
-        }
-     }
-    | :? PlaceBackBetDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = PlaceBackBet {
-            BetId = BetId dto.BetId
-            Stake = Stake dto.Stake
-            Odds = Odds dto.Odds
-            EventDescription = EventDescription dto.EventDescription
-        }
-     }
-    | :? PlaceFreeBetDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = PlaceFreeBet {
-            BetId = BetId dto.BetId
-            Stake = Stake dto.Stake
-            Odds = Odds dto.Odds
-            EventDescription = EventDescription dto.EventDescription
-        }
-     }
-    | :? PlaceLayBetDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = PlaceFreeBet {
-            BetId = BetId dto.BetId
-            Stake = Stake dto.Stake
-            Odds = Odds dto.Odds
-            EventDescription = EventDescription dto.EventDescription
-        }
-     }
-    | :? SettleBackBetDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = Domain.SettleBackBet {
-            BetId = BetId dto.BetId
-            Result = dto.Result
-        }
-     }
-    | :? SettleFreeBetDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = Domain.SettleFreeBet {
-            BetId = BetId dto.BetId
-            Result = dto.Result
-        }
-     }
-    | :? SettleLayBetDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = Domain.SettleLayBet {
-            BetId = BetId dto.BetId
-            Result = dto.Result
-        }
-     }
-    | :? CashOutBackBetDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = Domain.CashOutBackBet {
-            BetId = BetId dto.BetId
-            CashOutAmount = CashOutAmount dto.Amount
-        }
-     }
-    | :? CreditBonusDto as dto -> { 
-        AggregateId = AggregateId dto.AggregateId;
-        Timestamp = dto.Timestamp;
-        Payload = Domain.CreditBonus {
-            Amount = TransactionAmount dto.Amount
-        }
-     }
-    | _ -> failwith "unknown type"
 
 let handleCommand (store:EventStore) (command: Command): Result<Event list, CommandExecutionError> =
     // get the latest state from store
@@ -208,9 +114,8 @@ let handleCommand (store:EventStore) (command: Command): Result<Event list, Comm
 
     
 
-let handle (store: EventStore) (cmd: CommandDto) = 
+let handle (store: EventStore) (cmd: Command) = 
     cmd 
-    |> validate 
     |> handleCommand store
 
 let getCurrentState (eventStore: EventStore) (aggId: Guid) =

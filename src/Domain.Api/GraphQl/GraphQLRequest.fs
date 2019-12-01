@@ -1,7 +1,7 @@
-﻿namespace Domain.Api.GraphQl
+﻿namespace Domain.Api.GraphQL
 
 type GraphQLRequest = {
         query: string
-        operationName: string
-        variables: obj
+        operationName: string option
+        variables: Map<string, obj> option
     }

@@ -7,4 +7,7 @@ let applyDepositMade state (evt: CmdArgs.MakeDeposit) =
     ifNotEmpty
         state
         evt
-        (fun bookie evt -> Bookie { bookie with Balance = addAmountToBalance bookie.Balance evt.Amount })  
+        (fun bookie evt -> Bookie
+                            { bookie with
+                                Balance = addAmountToBalance bookie.Balance evt.Amount;
+                                TotalDeposits = addAmountToTotal bookie.TotalDeposits evt.Amount })  

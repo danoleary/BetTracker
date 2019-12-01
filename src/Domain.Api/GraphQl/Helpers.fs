@@ -1,4 +1,4 @@
-﻿namespace Domain.Api.GraphQl
+﻿namespace Domain.Api.GraphQL
 
 open System
 open System.Text

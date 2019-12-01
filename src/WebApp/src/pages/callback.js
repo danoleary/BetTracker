@@ -3,13 +3,18 @@ import { ClipLoader } from 'react-spinners'
  
 import Auth from '../services/auth'
 import Layout from '../components/layout'
-import useComponentDidMount from '../useComponentDidMount'
  
-const Auth0CallbackPage = () => {
-  useComponentDidMount(() => {
-    const auth = new Auth()
-    auth.handleAuthentication()
-  })
+function Auth0CallbackPage() {
+  const [mounted, setMounted] = useState(false)
+    useEffect(
+      () => {
+        setMounted(true)
+   
+        const auth = new Auth()
+        auth.handleAuthentication()
+      },
+      [mounted]
+    )
  
   return (
     <Layout>

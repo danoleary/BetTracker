@@ -6,11 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="EventDtos.fs" />
+    <Compile Remove="CommandDtos.fs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Result.fs" />
     <Compile Include="Domain.fs" />
-    <Compile Include="CommandDtos.fs" />
     <Compile Include="DomainHelpers.fs" />
     <Compile Include="CommandHandlers/AddBookieHandler.fs" />
     <Compile Include="CommandHandlers/MakeDepositHandler.fs" />

@@ -2,10 +2,12 @@ module LayBetSettledHandler
 
 open Domain
 open DomainHelpers
+open System
 
 let private calculateWinnings (Stake stake) odds =
     let exposure = calculateExposure (Stake stake) odds
-    Winnings (exposure + stake)
+    let commision = Math.Round(0.02m * stake, 2)
+    Winnings (exposure + stake - commision)
 
 let applyLayBetSettled state (evt: CmdArgs.SettleLayBet) =
     ifNotEmpty

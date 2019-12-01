@@ -16,15 +16,16 @@
     <Compile Include="Data/User.fs" />
     <Compile Include="Data/UserRepository.fs" />
     <Compile Include="DataImport\SpreadsheetUrls.fs" />
+    <Compile Include="DataImport\DataImportHelpers.fs" />
     <Compile Include="DataImport\DataImport.fs" />
+    <Compile Include="DataImport\FayeSmarkets.fs" />
+    <Compile Include="GraphQl\GraphQLQuery.fs" />
     <Compile Include="GraphQl\JsonConverters.fs" />
     <Compile Include="GraphQl\Helpers.fs" />
-    <Compile Include="GraphQl\Schema.fs" />
     <Compile Include="GraphQl\GraphQLRequest.fs" />
+    <Compile Include="GraphQl\Schema.fs" />
     <Compile Include="Controllers/DataImportController.fs" />
     <Compile Include="Controllers/UserController.fs" />
-    <Compile Include="Controllers/CommandsController.fs" />
-    <Compile Include="Controllers/StateController.fs" />
     <Compile Include="Controllers/HealthController.fs" />
     <Compile Include="Controllers\GraphQlController.fs" />
     <Compile Include="Auth/HasPermissionRequirement.fs" />
@@ -32,17 +33,17 @@
     <Compile Include="ReadModel\ReadModels.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
-    <ProjectReference Include="..\Domain\Domain.fsproj" />
+    <PackageReference Include="FSharpx.Extras" Version="2.3.2" />
+    <PackageReference Include="FSharp.Data" Version="3.2.4" />
     <PackageReference Include="Simple.Migrations" Version="0.9.20" />
     <PackageReference Include="Dapper" Version="2.0.30" />
-    <PackageReference Include="FSharp.Data" Version="3.2.4" />
-    <PackageReference Include="FSharp.Data.GraphQL.Server" Version="1.0.2" />
-    <PackageReference Include="Npgsql" Version="4.1.0" />
-    <PackageReference Include="FSharpx.Extras" Version="2.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.App">
       <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
       <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
     </PackageReference>
+    <PackageReference Include="FSharp.Data.GraphQL.Server" Version="1.0.2" />
+    <PackageReference Include="Npgsql" Version="4.1.0" />
+    <ProjectReference Include="..\Domain\Domain.fsproj" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
     <PackageReference Include="FSharp.Data.GraphQL.Server.Middleware" Version="1.0.2" />
   </ItemGroup>

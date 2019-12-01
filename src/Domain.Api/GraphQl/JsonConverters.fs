@@ -1,4 +1,4 @@
-﻿namespace Domain.Api.GraphQl
+﻿namespace Domain.Api.GraphQL
 
 open Newtonsoft.Json
 open Newtonsoft.Json.Linq
@@ -6,10 +6,6 @@ open Microsoft.FSharp.Reflection
 open FSharp.Data.GraphQL
 open FSharp.Data.GraphQL.Types
 open FSharp.Data.GraphQL.Types.Patterns
-
-type GraphQLQuery =
-    { ExecutionPlan : ExecutionPlan
-      Variables : Map<string, obj> }
       
 type OptionConverter() =
     inherit JsonConverter()

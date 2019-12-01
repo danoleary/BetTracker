@@ -3,6 +3,7 @@ namespace Data
 open Npgsql
 open Dapper
 open System.Collections.Generic
+open System
 
 
 module UserRepository =
@@ -20,7 +21,7 @@ module UserRepository =
     let getAggregatesForUser userId connectionString =
         use connection = new NpgsqlConnection(connectionString)
         let p: IDictionary<string, obj> = Map.ofList [ ("user_id", userId) ] |> Map.toSeq |> dict
-        connection.Query<Aggregate>("SELECT id, user_id From aggregates WHERE user_id = @user_id", p)
+        connection.Query<Guid>("SELECT id From aggregates WHERE user_id = @user_id", p)
 
     let insertUser id connectionString =
         use connection = new NpgsqlConnection(connectionString)

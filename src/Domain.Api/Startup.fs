@@ -12,6 +12,7 @@ open SimpleMigrations
 open SimpleMigrations.DatabaseProvider
 open System.Reflection
 open Npgsql
+open Domain.Api.GraphQL
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -25,7 +26,11 @@ type Startup private () =
         
         let env = services.BuildServiceProvider().GetService<IHostingEnvironment>()
 
-        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
+        services
+            .AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .AddJsonOptions(fun options ->
+                                options.SerializerSettings.Converters.Add(new OptionConverter())) |> ignore
+            
 
         let postgresConfig: CosmoStore.Marten.Configuration = {
             Host = this.Configuration.["Db:Host"]
@@ -107,6 +112,7 @@ type Startup private () =
         app.UseAuthentication() |> ignore
 
         app.UseMvc() |> ignore
+
 
         let assembly = Assembly.GetExecutingAssembly()
         use db = new NpgsqlConnection (this.Configuration.GetConnectionString("Database"))

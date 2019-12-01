@@ -1,6 +1,7 @@
 module DomainHelpers
 
 open Domain
+open System
 
 let onlyIfBookieExists state cmd =
     match state with
@@ -42,5 +43,8 @@ let addWinningsToBalance (Balance balance) (Winnings winnings) =
 let addAmountToBalance (Balance balance) (TransactionAmount amount) =
     Balance (balance + amount)
 
+let addAmountToTotal (TransactionAmount total) (TransactionAmount amount) =
+    TransactionAmount (total + amount)
+
 let calculateExposure (Stake stake) (Odds odds) =
-    stake * (odds - 1m)
+    Math.Round(stake * (odds - 1m), 2)
