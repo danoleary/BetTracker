@@ -26,6 +26,7 @@ let betId14 = Guid.NewGuid ()
 let betId15 = Guid.NewGuid ()
 let betId16 = Guid.NewGuid ()
 let betId17 = Guid.NewGuid ()
+let betId18 = Guid.NewGuid ()
 
 let smarketsCommands = [
    createBookie smarketsId (DateTime(2019, 11, 17, 16, 0, 0)) "Smarkets" 
@@ -69,4 +70,8 @@ let smarketsCommands = [
    settleLayBet (DateTime(2019, 12, 01, 18, 26, 0)) betId16 Win
    creditBonus smarketsId (DateTime(2019, 12, 01, 22, 15, 0)) 3.08m // hack need to figure out multiple bets on same market
    makeWithdrawal (DateTime(2019, 12, 01, 22, 16, 0)) 350.55m
+   makeDeposit (DateTime(2019, 12, 07, 11, 0, 0)) 30.0m
+   placeLayBet (DateTime(2019, 12, 07, 11, 5, 0)) 29.84m 1.88m betId17 "city utd both to score"
+   makeDeposit (DateTime(2019, 12, 07, 11, 30, 0)) 140.0m
+   placeLayBet (DateTime(2019, 12, 07, 11, 35, 0)) 32.30m 5.3m betId18 "city utd both to score"
 ]

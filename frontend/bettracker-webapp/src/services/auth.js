@@ -5,7 +5,7 @@ const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN
 const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENTID
 const AUTH0_CALLBACK_URL = process.env.AUTH0_CALLBACK
 const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE
- 
+
 export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: AUTH0_DOMAIN,

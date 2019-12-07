@@ -11,6 +11,8 @@ open FayeLadbrokes
 open FayeFansbet
 open FayePaddyPower
 open FayeBet365
+open FayeBetway
+open FayeUnibet
 
 let aggregateId (id: string) = AggregateId (Guid.Parse(id))
 
@@ -236,6 +238,8 @@ let importCommands eventStore =
 let importFayeCommands eventStore =
     let commands = Seq.concat [
         smarketsCommands; betfredCommands; skyCommands; willaimHillCommands;
-        ladbrokesCommands; fansbetCommands; paddyPowerCommands; bet365Commands]
+        ladbrokesCommands; fansbetCommands; paddyPowerCommands; bet365Commands;
+        betwayCommands; unibetCommands]
     commands |> List.ofSeq |> List.sortBy (fun x -> x.Timestamp) |> List.iter (fun x -> CommandHandler.handle eventStore x  |> ignore)
-    [ smarketsId; betfredId; skyId; williamHillId; ladbrokesId; fansbetId; paddyPowerId; bet365Id ]
+    [ smarketsId; betfredId; skyId; williamHillId; ladbrokesId; fansbetId; paddyPowerId; bet365Id;
+      betwayId; unibetId ]
