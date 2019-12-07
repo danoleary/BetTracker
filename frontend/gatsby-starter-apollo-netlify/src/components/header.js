@@ -9,12 +9,12 @@ const Header = ({ siteTitle }) => {
   const { isAuthenticated } = auth
   const logInSection = isAuthenticated() ?
     (
-      <div className="buttons">
+      <div class="buttons">
         <a className="button is-light" onClick={event => {
           event.preventDefault()
           auth.logout(() => navigate(`/`))
         }}>
-          Log out
+          <strong>Log out</strong>
         </a>
       </div>
     ) : (<div className="buttons">
@@ -27,55 +27,59 @@ const Header = ({ siteTitle }) => {
     </div>
     )
   return (
-    <header
-      style={{
-        marginBottom: `1.45rem`,
-        textAlign: `center`,
-      }}
-    >
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 800,
-          padding: `1.45rem 1.0875rem`,
-        }}
-      >
-        <a href="https://www.gatsbyjs.org">
-          <img
-            alt="Gatsby"
-            src="https://www.gatsbyjs.org/monogram.svg"
-            width="48"
-          />
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
         </a>
-        <a href="https://www.apollographql.com/">
-          <img
-            alt="Apollo"
-            src="https://rawgit.com/apollographql/apollo-client/master/docs/source/logo/square.png"
-            width="48"
-            style={{ marginLeft: `16px`, marginRight: `16px` }}
-          />
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
         </a>
-        <a href="https://www.netlify.com">
-          <img
-            alt="Netlify"
-            src="https://www.netlify.com/img/press/logos/logomark.png"
-            width="48"
-          />
-        </a>
-        <h1 style={{ margin: 0 }}>
-          <Link
-            to="/"
-            style={{
-              textDecoration: `none`,
-            }}
-          >
-            {siteTitle}
-          </Link>
-          
-        </h1>
-        {logInSection}
       </div>
-    </header>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item">
+            Home
+      </a>
+
+          <a class="navbar-item">
+            Documentation
+      </a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              More
+        </a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                About
+          </a>
+              <a class="navbar-item">
+                Jobs
+          </a>
+              <a class="navbar-item">
+                Contact
+          </a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item">
+                Report an issue
+          </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            {logInSection}
+          </div>
+        </div>
+      </div>
+    </nav>
   )
 }
 

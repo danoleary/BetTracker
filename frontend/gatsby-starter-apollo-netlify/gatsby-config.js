@@ -3,6 +3,7 @@ module.exports = {
     title: `BetTracker`
   },
   plugins: [
+    `gatsby-plugin-sass`,
     `gatsby-theme-apollo`,
     `gatsby-plugin-react-helmet`,
     {
